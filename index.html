@@ -1,1 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Phone</title>
+<link rel="stylesheet" href="style.css">
+</head>
 
+<body>
+
+<div id="phone">
+
+  <div id="statusBar">
+    <span id="statusTime">00:00</span>
+    <span>● ● ▰</span>
+  </div>
+
+  <main id="screen">
+
+    <!-- 홈 -->
+    <section id="home" class="screenPage">
+      <div id="bigTime">00:00</div>
+      <div id="dateText"></div>
+
+      <div class="apps">
+        <button class="app" onclick="openApp('phonePage','전화')">
+          <span>☎️</span>전화
+        </button>
+
+        <button class="app" onclick="openApp('cameraPage','카메라')">
+          <span>📷</span>카메라
+        </button>
+
+        <button class="app" onclick="openApp('galleryPage','갤러리')">
+          <span>🖼️</span>갤러리
+        </button>
+
+        <button class="app" onclick="openApp('memoPage','메모')">
+          <span>📝</span>메모
+        </button>
+
+        <button class="app" onclick="openApp('clockPage','시계')">
+          <span>⏰</span>시계
+        </button>
+
+        <button class="app" onclick="openApp('settingsPage','설정')">
+          <span>⚙️</span>설정
+        </button>
+
+        <button class="app" onclick="openApp('recentPage','최근 앱')">
+          <span>▣</span>최근 앱
+        </button>
+      </div>
+    </section>
+
+
+    <!-- 전화 -->
+    <section id="phonePage" class="page">
+      <button class="back" onclick="goHome()">‹</button>
+      <h2>전화</h2>
+
+      <input id="phoneNumber" type="tel" placeholder="전화번호">
+
+      <button class="bigButton" onclick="callNumber()">
+        📞 전화
+      </button>
+    </section>
+
+
+    <!-- 카메라 -->
+    <section id="cameraPage" class="page">
+      <button class="back" onclick="closeCamera()">‹</button>
+      <h2>카메라</h2>
+
+      <video id="camera" autoplay playsinline></video>
+
+      <button class="cameraButton" onclick="takePhoto()">●</button>
+
+      <canvas id="photoCanvas"></canvas>
+    </section>
+
+
+    <!-- 갤러리 -->
+    <section id="galleryPage" class="page">
+      <button class="back" onclick="goHome()">‹</button>
+      <h2>갤러리</h2>
+
+      <div id="gallery"></div>
+    </section>
+
+
+    <!-- 메모 -->
+    <section id="memoPage" class="page">
+      <button class="back" onclick="goHome()">‹</button>
+      <h2>메모</h2>
+
+      <textarea id="memo" placeholder="메모를 입력하세요"></textarea>
+
+      <button class="bigButton" onclick="saveMemo()">저장</button>
+    </section>
+
+
+    <!-- 시계 -->
+    <section id="clockPage" class="page">
+      <button class="back" onclick="goHome()">‹</button>
+      <h2>시계</h2>
+
+      <div id="clockBig">00:00:00</div>
+    </section>
+
+
+    <!-- 설정 -->
+    <section id="settingsPage" class="page">
+      <button class="back" onclick="goHome()">‹</button>
+      <h2>설정</h2>
+
+      <button class="settingButton" onclick="setLock()">
+        🔒 잠금 설정
+      </button>
+
+      <button class="settingButton" onclick="changeBackground()">
+        🎨 배경 변경
+      </button>
+
+      <button class="settingButton" onclick="clearGallery()">
+        🗑️ 사진 전체 삭제
+      </button>
+
+      <div class="infoBox">
+        <b>현재 잠금 방식</b>
+        <p id="lockInfo">숫자 PIN</p>
+      </div>
+    </section>
+
+
+    <!-- 최근 앱 -->
+    <section id="recentPage" class="page">
+      <button class="back" onclick="goHome()">‹</button>
+      <h2>최근 앱</h2>
+
+      <div id="recentList"></div>
+    </section>
+
+  </main>
+
+
+  <!-- 빠른 설정 -->
+  <div id="quickPanel">
+
+    <h2>빠른 설정</h2>
+
+    <div class="quickGrid">
+
+      <button id="wifiButton" onclick="toggleWifi()">
+        📶 Wi-Fi<br>ON
+      </button>
+
+      <button id="airButton" onclick="toggleAirplane()">
+        ✈️ 비행기<br>OFF
+      </button>
+
+      <button id="soundButton" onclick="toggleSound()">
+        🔊 소리
+      </button>
+
+      <button id="vibrationButton" onclick="toggleVibration()">
+        📳 진동 OFF
+      </button>
+
+      <button id="flashButton" onclick="toggleFlash()">
+        🔦 손전등 OFF
+      </button>
+
+    </div>
+
+    <div class="brightnessBox">
+      <label>밝기</label>
+      <input id="brightness" type="range" min="30" max="100" value="100">
+    </div>
+
+    <button class="closeQuick" onclick="hideQuick()">닫기</button>
+
+  </div>
+
+
+  <!-- 잠금 화면 -->
+  <div id="lockScreen">
+
+    <div class="lockIcon">🔒</div>
+    <h2>잠금 해제</h2>
+
+    <!-- PIN -->
+    <div id="pinArea">
+
+      <input
+        id="pinInput"
+        type="password"
+        inputmode="numeric"
+        maxlength="4"
+        placeholder="PIN"
+      >
+
+      <button onclick="unlockPin()">확인</button>
+
+    </div>
+
+
+    <!-- 패턴 -->
+    <div id="patternArea">
+
+      <canvas id="patternCanvas"></canvas>
+
+      <div id="patternDots">
+
+        <div class="patternDot" data-number="0"></div>
+        <div class="patternDot" data-number="1"></div>
+        <div class="patternDot" data-number="2"></div>
+
+        <div class="patternDot" data-number="3"></div>
+        <div class="patternDot" data-number="4"></div>
+        <div class="patternDot" data-number="5"></div>
+
+        <div class="patternDot" data-number="6"></div>
+        <div class="patternDot" data-number="7"></div>
+        <div class="patternDot" data-number="8"></div>
+
+      </div>
+
+    </div>
+
+    <div id="lockMessage"></div>
+
+  </div>
+
+
+  <!-- 전원 OFF -->
+  <div id="powerOff">
+    <h2>전원이 꺼졌습니다</h2>
+    <p>전원 버튼을 눌러 켜세요.</p>
+  </div>
+
+
+  <!-- 전원 버튼 -->
+  <button id="powerButton" onclick="powerToggle()"></button>
+
+
+  <!-- 하단 내비게이션 -->
+  <nav id="navigation">
+
+    <button onclick="goHome()">⌂</button>
+    <button onclick="goBack()">◀</button>
+    <button onclick="openApp('recentPage','최근 앱')">▣</button>
+
+  </nav>
+
+
+  <!-- 알림 -->
+  <div id="toast"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
