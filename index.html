@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mini Phone</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -11,252 +11,323 @@
 
 <div id="phone">
 
-  <div id="statusBar">
-    <span id="statusTime">00:00</span>
-    <span>● ● ▰</span>
-  </div>
+<div id="statusBar">
+<span id="statusTime">00:00</span>
+<span>● ● ▰</span>
+</div>
 
-  <main id="screen">
+<main id="screen">
 
-    <!-- 홈 -->
-    <section id="home" class="screenPage">
-      <div id="bigTime">00:00</div>
-      <div id="dateText"></div>
+<!-- 홈 -->
+<section id="home" class="screenPage">
 
-      <div class="apps">
-        <button class="app" onclick="openApp('phonePage','전화')">
-          <span>☎️</span>전화
-        </button>
+<div id="bigTime">00:00</div>
+<div id="dateText"></div>
 
-        <button class="app" onclick="openApp('cameraPage','카메라')">
-          <span>📷</span>카메라
-        </button>
+<div class="apps">
 
-        <button class="app" onclick="openApp('galleryPage','갤러리')">
-          <span>🖼️</span>갤러리
-        </button>
+<button class="app" onclick="openApp('phonePage')">
+<span>☎️</span>전화
+</button>
 
-        <button class="app" onclick="openApp('memoPage','메모')">
-          <span>📝</span>메모
-        </button>
+<button class="app" onclick="openApp('cameraPage')">
+<span>📷</span>카메라
+</button>
 
-        <button class="app" onclick="openApp('clockPage','시계')">
-          <span>⏰</span>시계
-        </button>
+<button class="app" onclick="openApp('galleryPage')">
+<span>🖼️</span>갤러리
+</button>
 
-        <button class="app" onclick="openApp('settingsPage','설정')">
-          <span>⚙️</span>설정
-        </button>
+<button class="app" onclick="openApp('memoPage')">
+<span>📝</span>메모
+</button>
 
-        <button class="app" onclick="openApp('recentPage','최근 앱')">
-          <span>▣</span>최근 앱
-        </button>
-      </div>
-    </section>
+<button class="app" onclick="openApp('clockPage')">
+<span>⏰</span>시계
+</button>
 
+<button class="app" onclick="openApp('settingsPage')">
+<span>⚙️</span>설정
+</button>
 
-    <!-- 전화 -->
-    <section id="phonePage" class="page">
-      <button class="back" onclick="goHome()">‹</button>
-      <h2>전화</h2>
+<button class="app" onclick="openApp('recentPage')">
+<span>▣</span>최근 앱
+</button>
 
-      <input id="phoneNumber" type="tel" placeholder="전화번호">
+</div>
+</section>
 
-      <button class="bigButton" onclick="callNumber()">
-        📞 전화
-      </button>
-    </section>
 
+<!-- 전화 -->
+<section id="phonePage" class="page">
 
-    <!-- 카메라 -->
-    <section id="cameraPage" class="page">
-      <button class="back" onclick="closeCamera()">‹</button>
-      <h2>카메라</h2>
+<button class="back" onclick="goHome()">‹</button>
+<h2>전화</h2>
 
-      <video id="camera" autoplay playsinline></video>
+<input id="phoneNumber" type="tel" placeholder="전화번호">
 
-      <button class="cameraButton" onclick="takePhoto()">●</button>
+<button class="bigButton" onclick="callNumber()">
+📞 전화
+</button>
 
-      <canvas id="photoCanvas"></canvas>
-    </section>
+</section>
 
 
-    <!-- 갤러리 -->
-    <section id="galleryPage" class="page">
-      <button class="back" onclick="goHome()">‹</button>
-      <h2>갤러리</h2>
+<!-- 카메라 -->
+<section id="cameraPage" class="page">
 
-      <div id="gallery"></div>
-    </section>
+<button class="back" onclick="closeCamera()">‹</button>
+<h2>카메라</h2>
 
+<video id="camera" autoplay playsinline></video>
 
-    <!-- 메모 -->
-    <section id="memoPage" class="page">
-      <button class="back" onclick="goHome()">‹</button>
-      <h2>메모</h2>
+<button class="cameraButton" onclick="takePhoto()">●</button>
 
-      <textarea id="memo" placeholder="메모를 입력하세요"></textarea>
+<canvas id="photoCanvas"></canvas>
 
-      <button class="bigButton" onclick="saveMemo()">저장</button>
-    </section>
+</section>
 
 
-    <!-- 시계 -->
-    <section id="clockPage" class="page">
-      <button class="back" onclick="goHome()">‹</button>
-      <h2>시계</h2>
+<!-- 갤러리 -->
+<section id="galleryPage" class="page">
 
-      <div id="clockBig">00:00:00</div>
-    </section>
+<button class="back" onclick="goHome()">‹</button>
 
+<div class="galleryHeader">
+<h2>갤러리</h2>
+<button onclick="clearGallery()">전체 삭제</button>
+</div>
 
-    <!-- 설정 -->
-    <section id="settingsPage" class="page">
-      <button class="back" onclick="goHome()">‹</button>
-      <h2>설정</h2>
+<div id="gallery"></div>
 
-      <button class="settingButton" onclick="setLock()">
-        🔒 잠금 설정
-      </button>
+</section>
 
-      <button class="settingButton" onclick="changeBackground()">
-        🎨 배경 변경
-      </button>
 
-      <button class="settingButton" onclick="clearGallery()">
-        🗑️ 사진 전체 삭제
-      </button>
+<!-- 메모 -->
+<section id="memoPage" class="page">
 
-      <div class="infoBox">
-        <b>현재 잠금 방식</b>
-        <p id="lockInfo">숫자 PIN</p>
-      </div>
-    </section>
+<button class="back" onclick="goHome()">‹</button>
+<h2>메모</h2>
 
+<textarea id="memo" placeholder="메모를 입력하세요"></textarea>
 
-    <!-- 최근 앱 -->
-    <section id="recentPage" class="page">
-      <button class="back" onclick="goHome()">‹</button>
-      <h2>최근 앱</h2>
+<button class="bigButton" onclick="saveMemo()">저장</button>
 
-      <div id="recentList"></div>
-    </section>
+</section>
 
-  </main>
 
+<!-- 시계 -->
+<section id="clockPage" class="page">
 
-  <!-- 빠른 설정 -->
-  <div id="quickPanel">
+<button class="back" onclick="goHome()">‹</button>
+<h2>시계</h2>
 
-    <h2>빠른 설정</h2>
+<div id="clockBig">00:00:00</div>
 
-    <div class="quickGrid">
+</section>
 
-      <button id="wifiButton" onclick="toggleWifi()">
-        📶 Wi-Fi<br>ON
-      </button>
 
-      <button id="airButton" onclick="toggleAirplane()">
-        ✈️ 비행기<br>OFF
-      </button>
+<!-- 설정 -->
+<section id="settingsPage" class="page">
 
-      <button id="soundButton" onclick="toggleSound()">
-        🔊 소리
-      </button>
+<button class="back" onclick="goHome()">‹</button>
+<h2>설정</h2>
 
-      <button id="vibrationButton" onclick="toggleVibration()">
-        📳 진동 OFF
-      </button>
+<button class="settingButton" onclick="changeLock()">
+🔒 잠금 설정 / 변경
+</button>
 
-      <button id="flashButton" onclick="toggleFlash()">
-        🔦 손전등 OFF
-      </button>
+<button class="settingButton" onclick="changeBackground()">
+🎨 배경 변경
+</button>
 
-    </div>
+<div class="infoBox">
+<b>현재 잠금 방식</b>
+<p id="lockInfo">잠금 없음</p>
+</div>
 
-    <div class="brightnessBox">
-      <label>밝기</label>
-      <input id="brightness" type="range" min="30" max="100" value="100">
-    </div>
+</section>
 
-    <button class="closeQuick" onclick="hideQuick()">닫기</button>
 
-  </div>
+<!-- 최근 앱 -->
+<section id="recentPage" class="page">
 
+<button class="back" onclick="goHome()">‹</button>
+<h2>최근 앱</h2>
 
-  <!-- 잠금 화면 -->
-  <div id="lockScreen">
+<div id="recentList"></div>
 
-    <div class="lockIcon">🔒</div>
-    <h2>잠금 해제</h2>
+</section>
 
-    <!-- PIN -->
-    <div id="pinArea">
+</main>
 
-      <input
-        id="pinInput"
-        type="password"
-        inputmode="numeric"
-        maxlength="4"
-        placeholder="PIN"
-      >
 
-      <button onclick="unlockPin()">확인</button>
+<!-- 빠른 설정 -->
+<div id="quickPanel">
 
-    </div>
+<h2>빠른 설정</h2>
 
+<div class="quickGrid">
 
-    <!-- 패턴 -->
-    <div id="patternArea">
+<button id="wifiButton" onclick="toggleWifi()">
+📶 Wi-Fi<br>ON
+</button>
 
-      <canvas id="patternCanvas"></canvas>
+<button id="airButton" onclick="toggleAirplane()">
+✈️ 비행기<br>OFF
+</button>
 
-      <div id="patternDots">
+<button id="soundButton" onclick="toggleSound()">
+🔊 소리
+</button>
 
-        <div class="patternDot" data-number="0"></div>
-        <div class="patternDot" data-number="1"></div>
-        <div class="patternDot" data-number="2"></div>
+<button id="vibrationButton" onclick="toggleVibration()">
+📳 진동 OFF
+</button>
 
-        <div class="patternDot" data-number="3"></div>
-        <div class="patternDot" data-number="4"></div>
-        <div class="patternDot" data-number="5"></div>
+<button id="flashButton" onclick="toggleFlash()">
+🔦 손전등 OFF
+</button>
 
-        <div class="patternDot" data-number="6"></div>
-        <div class="patternDot" data-number="7"></div>
-        <div class="patternDot" data-number="8"></div>
+</div>
 
-      </div>
+<div class="brightnessBox">
+<label>밝기</label>
+<input id="brightness" type="range" min="30" max="100" value="100">
+</div>
 
-    </div>
+<button class="closeQuick" onclick="hideQuick()">닫기</button>
 
-    <div id="lockMessage"></div>
+</div>
 
-  </div>
 
+<!-- 잠금 화면 -->
+<div id="lockScreen">
 
-  <!-- 전원 OFF -->
-  <div id="powerOff">
-    <h2>전원이 꺼졌습니다</h2>
-    <p>전원 버튼을 눌러 켜세요.</p>
-  </div>
+<div class="lockIcon">🔒</div>
+<h2>잠금 해제</h2>
 
+<div id="pinArea">
 
-  <!-- 전원 버튼 -->
-  <button id="powerButton" onclick="powerToggle()"></button>
+<input
+id="pinInput"
+type="password"
+inputmode="numeric"
+maxlength="4"
+placeholder="PIN"
+>
 
+<button onclick="unlockPin()">확인</button>
 
-  <!-- 하단 내비게이션 -->
-  <nav id="navigation">
+</div>
 
-    <button onclick="goHome()">⌂</button>
-    <button onclick="goBack()">◀</button>
-    <button onclick="openApp('recentPage','최근 앱')">▣</button>
 
-  </nav>
+<div id="patternArea">
 
+<canvas id="patternCanvas"></canvas>
 
-  <!-- 알림 -->
-  <div id="toast"></div>
+<div id="patternDots">
+
+<div class="patternDot" data-number="0"></div>
+<div class="patternDot" data-number="1"></div>
+<div class="patternDot" data-number="2"></div>
+
+<div class="patternDot" data-number="3"></div>
+<div class="patternDot" data-number="4"></div>
+<div class="patternDot" data-number="5"></div>
+
+<div class="patternDot" data-number="6"></div>
+<div class="patternDot" data-number="7"></div>
+<div class="patternDot" data-number="8"></div>
+
+</div>
+</div>
+
+<div id="lockMessage"></div>
+
+</div>
+
+
+<!-- 패턴 설정용 창 -->
+<div id="patternSetup">
+
+<h2 id="patternSetupTitle">새 패턴 설정</h2>
+
+<p id="patternSetupText">
+손가락으로 점을 연결하세요.
+</p>
+
+<div id="setupPatternArea">
+
+<canvas id="setupPatternCanvas"></canvas>
+
+<div id="setupPatternDots">
+
+<div class="patternDot" data-number="0"></div>
+<div class="patternDot" data-number="1"></div>
+<div class="patternDot" data-number="2"></div>
+
+<div class="patternDot" data-number="3"></div>
+<div class="patternDot" data-number="4"></div>
+<div class="patternDot" data-number="5"></div>
+
+<div class="patternDot" data-number="6"></div>
+<div class="patternDot" data-number="7"></div>
+<div class="patternDot" data-number="8"></div>
+
+</div>
+
+</div>
+
+<button id="patternSetupButton" onclick="finishPatternSetup()">
+확인
+</button>
+
+<button class="cancelButton" onclick="cancelPatternSetup()">
+취소
+</button>
+
+</div>
+
+
+<!-- 사진 크게 보기 -->
+<div id="photoViewer">
+
+<button class="viewerClose" onclick="closePhotoViewer()">×</button>
+
+<img id="largePhoto">
+
+<button class="viewerDelete" onclick="deleteCurrentPhoto()">
+🗑 사진 삭제
+</button>
+
+</div>
+
+
+<!-- 전원 OFF -->
+<div id="powerOff">
+
+<h2>전원이 꺼졌습니다</h2>
+<p>전원 버튼을 눌러 켜세요.</p>
+
+</div>
+
+
+<!-- 전원 버튼 -->
+<button id="powerButton" onclick="powerToggle()"></button>
+
+
+<!-- 하단 -->
+<nav id="navigation">
+
+<button onclick="goHome()">⌂</button>
+<button onclick="goBack()">◀</button>
+<button onclick="openApp('recentPage')">▣</button>
+
+</nav>
+
+
+<div id="toast"></div>
 
 </div>
 
