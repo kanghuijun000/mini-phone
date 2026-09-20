@@ -1,409 +1,520 @@
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
 }
 
-html,
-body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  background: #222;
+html,body{
+margin:0;
+width:100%;
+height:100%;
+overflow:hidden;
+font-family:Arial,sans-serif;
+background:#222;
 }
 
-button,
-input,
-textarea {
-  font-family: inherit;
+button,input,textarea{
+font-family:inherit;
 }
 
-button {
-  border: 0;
-  cursor: pointer;
+button{
+border:0;
+cursor:pointer;
 }
 
-#phone {
-  position: relative;
-  width: 100%;
-  max-width: 430px;
-  height: 100%;
-  margin: auto;
-  background: #111;
-  overflow: hidden;
+#phone{
+position:relative;
+width:100%;
+max-width:430px;
+height:100%;
+margin:auto;
+background:#111;
+overflow:hidden;
 }
 
-#statusBar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 30px;
-  padding: 0 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: white;
-  background: #111;
-  font-size: 12px;
-  z-index: 50;
+#statusBar{
+position:absolute;
+top:0;
+left:0;
+right:0;
+height:30px;
+padding:0 12px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+color:white;
+background:#111;
+font-size:12px;
+z-index:50;
 }
 
-#screen {
-  position: absolute;
-  top: 30px;
-  bottom: 55px;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-  background: #f4f4f4;
-  transition: filter .2s;
+#screen{
+position:absolute;
+top:30px;
+bottom:55px;
+left:0;
+right:0;
+overflow:hidden;
+background:#f4f4f4;
+transition:filter .2s;
 }
 
 .screenPage,
-.page {
-  width: 100%;
-  height: 100%;
+.page{
+width:100%;
+height:100%;
 }
 
-.page {
-  display: none;
-  padding: 15px;
-  overflow-y: auto;
+.page{
+display:none;
+padding:15px;
+overflow-y:auto;
 }
 
-#home {
-  padding: 35px 18px;
-  overflow-y: auto;
+#home{
+padding:35px 18px;
+overflow-y:auto;
 }
 
-#bigTime {
-  margin-top: 10px;
-  text-align: center;
-  font-size: 48px;
-  font-weight: 300;
+#bigTime{
+margin-top:10px;
+text-align:center;
+font-size:48px;
 }
 
-#dateText {
-  text-align: center;
-  color: #666;
-  margin: 5px 0 35px;
+#dateText{
+text-align:center;
+color:#666;
+margin:5px 0 35px;
 }
 
-.apps {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 25px 8px;
+.apps{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px 8px;
 }
 
-.app {
-  background: transparent;
-  color: #222;
-  font-size: 12px;
+.app{
+background:transparent;
+color:#222;
+font-size:12px;
 }
 
-.app span {
-  display: flex;
-  width: 58px;
-  height: 58px;
-  margin: auto auto 6px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  background: #ddd;
-  font-size: 28px;
+.app span{
+display:flex;
+width:58px;
+height:58px;
+margin:auto auto 6px;
+align-items:center;
+justify-content:center;
+border-radius:16px;
+background:#ddd;
+font-size:28px;
 }
 
-.back {
-  background: transparent;
-  font-size: 30px;
-  color: #222;
+.back{
+background:transparent;
+font-size:30px;
+color:#222;
 }
 
-.page h2 {
-  margin-top: 0;
+.page h2{
+margin-top:0;
 }
 
-#phoneNumber {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+#phoneNumber{
+width:100%;
+padding:13px;
+border:1px solid #ccc;
+border-radius:10px;
 }
 
 .bigButton,
-.settingButton {
-  width: 100%;
-  margin-top: 12px;
-  padding: 14px;
-  border-radius: 12px;
-  background: #ddd;
-  font-size: 16px;
+.settingButton{
+width:100%;
+margin-top:12px;
+padding:14px;
+border-radius:12px;
+background:#ddd;
+font-size:16px;
 }
 
-.cameraButton {
-  display: block;
-  width: 65px;
-  height: 65px;
-  margin: 15px auto;
-  border-radius: 50%;
-  background: white;
-  border: 5px solid #999;
-  font-size: 25px;
+.cameraButton{
+display:block;
+width:65px;
+height:65px;
+margin:15px auto;
+border-radius:50%;
+background:white;
+border:5px solid #999;
+font-size:25px;
 }
 
-#camera {
-  width: 100%;
-  max-height: 65vh;
-  background: #000;
-  border-radius: 12px;
-  object-fit: cover;
+#camera{
+width:100%;
+max-height:65vh;
+background:#000;
+border-radius:12px;
+object-fit:cover;
 }
 
-#photoCanvas {
-  display: none;
+#photoCanvas{
+display:none;
 }
 
-#gallery {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
+
+/* 갤러리 */
+
+.galleryHeader{
+display:flex;
+align-items:center;
+justify-content:space-between;
 }
 
-.galleryImage {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 5px;
+.galleryHeader h2{
+margin:0;
 }
 
-#memo {
-  width: 100%;
-  height: 65%;
-  padding: 12px;
-  resize: none;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+.galleryHeader button{
+padding:8px 12px;
+border-radius:8px;
+background:#ddd;
 }
 
-#clockBig {
-  text-align: center;
-  margin-top: 70px;
-  font-size: 50px;
+#gallery{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:5px;
+margin-top:15px;
 }
 
-.infoBox {
-  margin-top: 20px;
-  padding: 15px;
-  background: #ddd;
-  border-radius: 12px;
+.galleryImage{
+width:100%;
+aspect-ratio:1;
+object-fit:cover;
+border-radius:5px;
+cursor:pointer;
 }
 
-#recentList .recentItem {
-  width: 100%;
-  padding: 15px;
-  margin-bottom: 8px;
-  border-radius: 12px;
-  background: #ddd;
-  text-align: left;
+
+/* 메모 */
+
+#memo{
+width:100%;
+height:65%;
+padding:12px;
+resize:none;
+border:1px solid #ccc;
+border-radius:10px;
+}
+
+
+/* 시계 */
+
+#clockBig{
+text-align:center;
+margin-top:70px;
+font-size:50px;
+}
+
+
+/* 설정 */
+
+.infoBox{
+margin-top:20px;
+padding:15px;
+background:#ddd;
+border-radius:12px;
+}
+
+
+/* 최근 앱 */
+
+#recentList .recentItem{
+width:100%;
+padding:15px;
+margin-bottom:8px;
+border-radius:12px;
+background:#ddd;
+text-align:left;
 }
 
 
 /* 빠른 설정 */
 
-#quickPanel {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 370px;
-  padding: 35px 15px 15px;
-  background: rgba(25,25,25,.97);
-  color: white;
-  border-radius: 0 0 20px 20px;
-  z-index: 200;
-  display: none;
+#quickPanel{
+position:absolute;
+top:0;
+left:0;
+right:0;
+height:370px;
+padding:35px 15px 15px;
+background:rgba(25,25,25,.97);
+color:white;
+border-radius:0 0 20px 20px;
+z-index:200;
+display:none;
 }
 
-#quickPanel h2 {
-  margin: 0 0 15px;
+#quickPanel h2{
+margin:0 0 15px;
 }
 
-.quickGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+.quickGrid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:8px;
 }
 
-.quickGrid button {
-  padding: 14px 5px;
-  border-radius: 12px;
-  background: #444;
-  color: white;
+.quickGrid button{
+padding:14px 5px;
+border-radius:12px;
+background:#444;
+color:white;
 }
 
-.brightnessBox {
-  margin-top: 18px;
+.brightnessBox{
+margin-top:18px;
 }
 
-.brightnessBox label {
-  display: block;
-  margin-bottom: 5px;
+.brightnessBox label{
+display:block;
+margin-bottom:5px;
 }
 
-#brightness {
-  width: 100%;
+#brightness{
+width:100%;
 }
 
-.closeQuick {
-  width: 100%;
-  margin-top: 15px;
-  padding: 10px;
-  border-radius: 10px;
+.closeQuick{
+width:100%;
+margin-top:15px;
+padding:10px;
+border-radius:10px;
 }
 
 
-/* 잠금 화면 */
+/* 잠금 */
 
-#lockScreen {
-  position: absolute;
-  inset: 0;
-  background: #111;
-  color: white;
-  z-index: 220;
-  display: none;
-  text-align: center;
-  padding-top: 70px;
+#lockScreen{
+position:absolute;
+inset:0;
+background:#111;
+color:white;
+z-index:220;
+display:none;
+text-align:center;
+padding-top:70px;
 }
 
-.lockIcon {
-  font-size: 45px;
+.lockIcon{
+font-size:45px;
 }
 
-#pinArea input {
-  display: block;
-  width: 180px;
-  margin: 20px auto 10px;
-  padding: 12px;
-  text-align: center;
-  font-size: 25px;
-  border-radius: 10px;
-  border: 0;
+#pinArea input{
+display:block;
+width:180px;
+margin:20px auto 10px;
+padding:12px;
+text-align:center;
+font-size:25px;
+border-radius:10px;
+border:0;
 }
 
-#pinArea button {
-  padding: 11px 35px;
-  border-radius: 10px;
+#pinArea button{
+padding:11px 35px;
+border-radius:10px;
 }
 
-#patternArea {
-  position: relative;
-  width: 270px;
-  height: 270px;
-  margin: 20px auto;
-  display: none;
+
+/* 패턴 */
+
+#patternArea,
+#setupPatternArea{
+position:relative;
+width:270px;
+height:270px;
+margin:20px auto;
+touch-action:none;
 }
 
-#patternCanvas {
-  position: absolute;
-  inset: 0;
-  width: 270px;
-  height: 270px;
-  pointer-events: none;
+#patternCanvas,
+#setupPatternCanvas{
+position:absolute;
+inset:0;
+width:270px;
+height:270px;
+pointer-events:none;
 }
 
-#patternDots {
-  position: absolute;
-  inset: 0;
+#patternDots,
+#setupPatternDots{
+position:absolute;
+inset:0;
+touch-action:none;
 }
 
-.patternDot {
-  position: absolute;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: white;
-  border: 3px solid #777;
-  transform: translate(-50%, -50%);
+.patternDot{
+position:absolute;
+width:25px;
+height:25px;
+border-radius:50%;
+background:white;
+border:3px solid #777;
+transform:translate(-50%,-50%);
 }
 
-.patternDot.active {
-  background: #2196f3;
-  border-color: #2196f3;
+.patternDot.active{
+background:#2196f3;
+border-color:#2196f3;
 }
 
-.patternDot:nth-child(1) { left: 20%; top: 20%; }
-.patternDot:nth-child(2) { left: 50%; top: 20%; }
-.patternDot:nth-child(3) { left: 80%; top: 20%; }
+.patternDot:nth-child(1){left:20%;top:20%}
+.patternDot:nth-child(2){left:50%;top:20%}
+.patternDot:nth-child(3){left:80%;top:20%}
 
-.patternDot:nth-child(4) { left: 20%; top: 50%; }
-.patternDot:nth-child(5) { left: 50%; top: 50%; }
-.patternDot:nth-child(6) { left: 80%; top: 50%; }
+.patternDot:nth-child(4){left:20%;top:50%}
+.patternDot:nth-child(5){left:50%;top:50%}
+.patternDot:nth-child(6){left:80%;top:50%}
 
-.patternDot:nth-child(7) { left: 20%; top: 80%; }
-.patternDot:nth-child(8) { left: 50%; top: 80%; }
-.patternDot:nth-child(9) { left: 80%; top: 80%; }
+.patternDot:nth-child(7){left:20%;top:80%}
+.patternDot:nth-child(8){left:50%;top:80%}
+.patternDot:nth-child(9){left:80%;top:80%}
+
+
+/* 패턴 설정창 */
+
+#patternSetup{
+position:absolute;
+inset:0;
+z-index:240;
+display:none;
+background:#111;
+color:white;
+text-align:center;
+padding-top:55px;
+}
+
+#patternSetup h2{
+margin:0 0 8px;
+}
+
+#patternSetup p{
+color:#ccc;
+margin:0;
+}
+
+#patternSetupButton,
+.cancelButton{
+padding:11px 35px;
+border-radius:10px;
+margin:5px;
+}
+
+.cancelButton{
+background:#555;
+color:white;
+}
+
+
+/* 사진 크게 보기 */
+
+#photoViewer{
+position:absolute;
+inset:0;
+z-index:300;
+display:none;
+background:rgba(0,0,0,.96);
+align-items:center;
+justify-content:center;
+flex-direction:column;
+}
+
+#largePhoto{
+max-width:92%;
+max-height:75%;
+object-fit:contain;
+}
+
+.viewerClose{
+position:absolute;
+top:20px;
+right:20px;
+width:45px;
+height:45px;
+border-radius:50%;
+background:#333;
+color:white;
+font-size:30px;
+}
+
+.viewerDelete{
+margin-top:20px;
+padding:12px 20px;
+border-radius:10px;
+background:#d33;
+color:white;
+}
 
 
 /* 전원 */
 
-#powerOff {
-  position: absolute;
-  inset: 0;
-  z-index: 250;
-  display: none;
-  background: black;
-  color: white;
-  text-align: center;
-  padding-top: 40vh;
+#powerOff{
+position:absolute;
+inset:0;
+z-index:250;
+display:none;
+background:black;
+color:white;
+text-align:center;
+padding-top:40vh;
 }
 
-#powerButton {
-  position: absolute;
-  right: 0;
-  top: 90px;
-  width: 8px;
-  height: 80px;
-  background: #444;
-  z-index: 400;
+#powerButton{
+position:absolute;
+right:0;
+top:90px;
+width:8px;
+height:80px;
+background:#444;
+z-index:400;
 }
 
 
 /* 하단 */
 
-#navigation {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 55px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background: #111;
-  z-index: 100;
+#navigation{
+position:absolute;
+left:0;
+right:0;
+bottom:0;
+height:55px;
+display:flex;
+align-items:center;
+justify-content:space-around;
+background:#111;
+z-index:100;
 }
 
-#navigation button {
-  background: transparent;
-  color: white;
-  font-size: 22px;
+#navigation button{
+background:transparent;
+color:white;
+font-size:22px;
 }
 
 
 /* 알림 */
 
-#toast {
-  position: absolute;
-  left: 50%;
-  bottom: 70px;
-  transform: translateX(-50%);
-  display: none;
-  padding: 10px 16px;
-  border-radius: 20px;
-  background: #222;
-  color: white;
-  z-index: 500;
-  white-space: nowrap;
+#toast{
+position:absolute;
+left:50%;
+bottom:70px;
+transform:translateX(-50%);
+display:none;
+padding:10px 16px;
+border-radius:20px;
+background:#222;
+color:white;
+z-index:500;
+white-space:nowrap;
 }
