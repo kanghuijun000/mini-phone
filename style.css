@@ -1,520 +1,729 @@
-*{
-box-sizing:border-box;
--webkit-tap-highlight-color:transparent;
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-html,body{
-margin:0;
-width:100%;
-height:100%;
-overflow:hidden;
-font-family:Arial,sans-serif;
-background:#222;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, "Noto Sans KR", sans-serif;
+  background: #111;
 }
 
-button,input,textarea{
-font-family:inherit;
+button,
+input,
+textarea {
+  font: inherit;
 }
 
-button{
-border:0;
-cursor:pointer;
+button {
+  border: 0;
+  cursor: pointer;
 }
 
-#phone{
-position:relative;
-width:100%;
-max-width:430px;
-height:100%;
-margin:auto;
-background:#111;
-overflow:hidden;
+.hidden {
+  display: none !important;
 }
 
-#statusBar{
-position:absolute;
-top:0;
-left:0;
-right:0;
-height:30px;
-padding:0 12px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-color:white;
-background:#111;
-font-size:12px;
-z-index:50;
+/* =========================
+   스마트폰 본체
+========================= */
+
+#phone {
+  position: relative;
+  width: min(100vw, 430px);
+  height: min(100vh, 850px);
+  margin: auto;
+  background: #000;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
 }
 
-#screen{
-position:absolute;
-top:30px;
-bottom:55px;
-left:0;
-right:0;
-overflow:hidden;
-background:#f4f4f4;
-transition:filter .2s;
+/* 전원 버튼 */
+
+#powerButton {
+  position: absolute;
+  right: 0;
+  top: 150px;
+  width: 10px;
+  height: 70px;
+  background: #333;
+  border-radius: 5px 0 0 5px;
+  z-index: 1000;
 }
 
-.screenPage,
-.page{
-width:100%;
-height:100%;
+/* =========================
+   상태바
+========================= */
+
+#statusBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 32px;
+  padding: 5px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  font-size: 13px;
+  z-index: 100;
+  pointer-events: none;
 }
 
-.page{
-display:none;
-padding:15px;
-overflow-y:auto;
+/* =========================
+   화면
+========================= */
+
+#screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg, #111, #222);
+  overflow: hidden;
 }
 
-#home{
-padding:35px 18px;
-overflow-y:auto;
+.page {
+  width: 100%;
+  height: 100%;
+  padding: 45px 18px 85px;
+  overflow-y: auto;
 }
 
-#bigTime{
-margin-top:10px;
-text-align:center;
-font-size:48px;
+/* =========================
+   홈
+========================= */
+
+#homePage {
+  text-align: center;
 }
 
-#dateText{
-text-align:center;
-color:#666;
-margin:5px 0 35px;
+.homeClock {
+  margin-top: 45px;
+  font-size: 52px;
+  font-weight: 200;
+  color: white;
 }
 
-.apps{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:25px 8px;
+.homeDate {
+  color: #ccc;
+  margin-top: 4px;
+  margin-bottom: 45px;
 }
 
-.app{
-background:transparent;
-color:#222;
-font-size:12px;
+.appGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px 18px;
 }
 
-.app span{
-display:flex;
-width:58px;
-height:58px;
-margin:auto auto 6px;
-align-items:center;
-justify-content:center;
-border-radius:16px;
-background:#ddd;
-font-size:28px;
+.appIcon {
+  background: transparent;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
 }
 
-.back{
-background:transparent;
-font-size:30px;
-color:#222;
+.appIcon span {
+  width: 62px;
+  height: 62px;
+  border-radius: 17px;
+  background: rgba(255,255,255,0.12);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 31px;
+  backdrop-filter: blur(8px);
 }
 
-.page h2{
-margin-top:0;
+.appIcon label {
+  font-size: 13px;
 }
 
-#phoneNumber{
-width:100%;
-padding:13px;
-border:1px solid #ccc;
-border-radius:10px;
+/* =========================
+   앱 헤더
+========================= */
+
+.appPage {
+  color: white;
 }
 
-.bigButton,
-.settingButton{
-width:100%;
-margin-top:12px;
-padding:14px;
-border-radius:12px;
-background:#ddd;
-font-size:16px;
+.appHeader {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-.cameraButton{
-display:block;
-width:65px;
-height:65px;
-margin:15px auto;
-border-radius:50%;
-background:white;
-border:5px solid #999;
-font-size:25px;
+.appHeader h2 {
+  margin: 0;
 }
 
-#camera{
-width:100%;
-max-height:65vh;
-background:#000;
-border-radius:12px;
-object-fit:cover;
+.backApp {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  font-size: 30px;
 }
 
-#photoCanvas{
-display:none;
+/* =========================
+   전화
+========================= */
+
+.phoneBody {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-
-/* 갤러리 */
-
-.galleryHeader{
-display:flex;
-align-items:center;
-justify-content:space-between;
+.phoneBody input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: 0;
+  font-size: 20px;
 }
 
-.galleryHeader h2{
-margin:0;
+#callButton {
+  padding: 15px;
+  border-radius: 12px;
+  background: #35c759;
+  color: white;
+  font-weight: bold;
 }
 
-.galleryHeader button{
-padding:8px 12px;
-border-radius:8px;
-background:#ddd;
+#callResult {
+  text-align: center;
+  min-height: 25px;
 }
 
-#gallery{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:5px;
-margin-top:15px;
+/* =========================
+   카메라
+========================= */
+
+.cameraBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.galleryImage{
-width:100%;
-aspect-ratio:1;
-object-fit:cover;
-border-radius:5px;
-cursor:pointer;
+#cameraVideo,
+#photoCanvas {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: #111;
+  border-radius: 18px;
 }
 
-
-/* 메모 */
-
-#memo{
-width:100%;
-height:65%;
-padding:12px;
-resize:none;
-border:1px solid #ccc;
-border-radius:10px;
+#photoCanvas {
+  display: none;
 }
 
-
-/* 시계 */
-
-#clockBig{
-text-align:center;
-margin-top:70px;
-font-size:50px;
+.cameraControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
 
-
-/* 설정 */
-
-.infoBox{
-margin-top:20px;
-padding:15px;
-background:#ddd;
-border-radius:12px;
+.cameraControls button {
+  padding: 11px;
+  border-radius: 12px;
+  background: #333;
+  color: white;
 }
 
-
-/* 최근 앱 */
-
-#recentList .recentItem{
-width:100%;
-padding:15px;
-margin-bottom:8px;
-border-radius:12px;
-background:#ddd;
-text-align:left;
+#takePhoto {
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border-radius: 50%;
+  border: 5px solid white;
+  background: #222;
+  font-size: 20px;
 }
 
+/* =========================
+   갤러리
+========================= */
 
-/* 빠른 설정 */
-
-#quickPanel{
-position:absolute;
-top:0;
-left:0;
-right:0;
-height:370px;
-padding:35px 15px 15px;
-background:rgba(25,25,25,.97);
-color:white;
-border-radius:0 0 20px 20px;
-z-index:200;
-display:none;
+#galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-top: 15px;
 }
 
-#quickPanel h2{
-margin:0 0 15px;
+.galleryItem {
+  position: relative;
+  aspect-ratio: 1;
 }
 
-.quickGrid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:8px;
+.galleryItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
 }
 
-.quickGrid button{
-padding:14px 5px;
-border-radius:12px;
-background:#444;
-color:white;
+.galleryDelete {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.7);
+  color: white;
 }
 
-.brightnessBox{
-margin-top:18px;
+/* 사진 확대 */
+
+#photoViewer {
+  position: absolute;
+  inset: 0;
+  z-index: 500;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
 }
 
-.brightnessBox label{
-display:block;
-margin-bottom:5px;
+#viewerImage {
+  max-width: 100%;
+  max-height: 75%;
+  object-fit: contain;
 }
 
-#brightness{
-width:100%;
+#closePhotoViewer {
+  position: absolute;
+  top: 35px;
+  right: 20px;
+  color: white;
+  background: transparent;
+  font-size: 38px;
 }
 
-.closeQuick{
-width:100%;
-margin-top:15px;
-padding:10px;
-border-radius:10px;
+#deleteCurrentPhoto {
+  margin-top: 20px;
+  background: #ff3b30;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 12px;
 }
 
+/* =========================
+   메모
+========================= */
 
-/* 잠금 */
-
-#lockScreen{
-position:absolute;
-inset:0;
-background:#111;
-color:white;
-z-index:220;
-display:none;
-text-align:center;
-padding-top:70px;
+.primaryButton,
+.dangerButton {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  margin-bottom: 15px;
 }
 
-.lockIcon{
-font-size:45px;
+.primaryButton {
+  background: #3478f6;
+  color: white;
 }
 
-#pinArea input{
-display:block;
-width:180px;
-margin:20px auto 10px;
-padding:12px;
-text-align:center;
-font-size:25px;
-border-radius:10px;
-border:0;
+.dangerButton {
+  background: #ff3b30;
+  color: white;
 }
 
-#pinArea button{
-padding:11px 35px;
-border-radius:10px;
+.memoCard {
+  padding: 15px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 13px;
 }
 
-
-/* 패턴 */
-
-#patternArea,
-#setupPatternArea{
-position:relative;
-width:270px;
-height:270px;
-margin:20px auto;
-touch-action:none;
+.memoCard h3 {
+  margin: 0 0 6px;
 }
 
-#patternCanvas,
-#setupPatternCanvas{
-position:absolute;
-inset:0;
-width:270px;
-height:270px;
-pointer-events:none;
+.memoCard p {
+  margin: 0;
+  color: #bbb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-#patternDots,
-#setupPatternDots{
-position:absolute;
-inset:0;
-touch-action:none;
+#memoTitle,
+#memoContent {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 13px;
+  margin-bottom: 12px;
 }
 
-.patternDot{
-position:absolute;
-width:25px;
-height:25px;
-border-radius:50%;
-background:white;
-border:3px solid #777;
-transform:translate(-50%,-50%);
+#memoTitle {
+  font-size: 18px;
 }
 
-.patternDot.active{
-background:#2196f3;
-border-color:#2196f3;
+#memoContent {
+  height: 300px;
+  resize: none;
 }
 
-.patternDot:nth-child(1){left:20%;top:20%}
-.patternDot:nth-child(2){left:50%;top:20%}
-.patternDot:nth-child(3){left:80%;top:20%}
-
-.patternDot:nth-child(4){left:20%;top:50%}
-.patternDot:nth-child(5){left:50%;top:50%}
-.patternDot:nth-child(6){left:80%;top:50%}
-
-.patternDot:nth-child(7){left:20%;top:80%}
-.patternDot:nth-child(8){left:50%;top:80%}
-.patternDot:nth-child(9){left:80%;top:80%}
-
-
-/* 패턴 설정창 */
-
-#patternSetup{
-position:absolute;
-inset:0;
-z-index:240;
-display:none;
-background:#111;
-color:white;
-text-align:center;
-padding-top:55px;
+.memoEditButtons {
+  display: flex;
+  gap: 10px;
 }
 
-#patternSetup h2{
-margin:0 0 8px;
+.memoEditButtons button {
+  flex: 1;
 }
 
-#patternSetup p{
-color:#ccc;
-margin:0;
+/* =========================
+   시계
+========================= */
+
+.bigClock {
+  font-size: 60px;
+  text-align: center;
+  margin-top: 100px;
 }
 
-#patternSetupButton,
-.cancelButton{
-padding:11px 35px;
-border-radius:10px;
-margin:5px;
+.bigDate {
+  text-align: center;
+  margin-top: 15px;
+  color: #bbb;
 }
 
-.cancelButton{
-background:#555;
-color:white;
+/* =========================
+   설정
+========================= */
+
+.settingItem {
+  background: rgba(255,255,255,0.09);
+  padding: 18px;
+  border-radius: 15px;
+  margin-bottom: 15px;
 }
 
-
-/* 사진 크게 보기 */
-
-#photoViewer{
-position:absolute;
-inset:0;
-z-index:300;
-display:none;
-background:rgba(0,0,0,.96);
-align-items:center;
-justify-content:center;
-flex-direction:column;
+.settingItem strong {
+  display: block;
+  margin-bottom: 8px;
 }
 
-#largePhoto{
-max-width:92%;
-max-height:75%;
-object-fit:contain;
+#lockStatus {
+  display: block;
+  color: #aaa;
+  margin-bottom: 14px;
 }
 
-.viewerClose{
-position:absolute;
-top:20px;
-right:20px;
-width:45px;
-height:45px;
-border-radius:50%;
-background:#333;
-color:white;
-font-size:30px;
+.settingButtons,
+.backgroundButtons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
 }
 
-.viewerDelete{
-margin-top:20px;
-padding:12px 20px;
-border-radius:10px;
-background:#d33;
-color:white;
+.settingButtons button,
+.backgroundButtons button {
+  padding: 11px;
+  border-radius: 10px;
+  background: #333;
+  color: white;
 }
 
+/* =========================
+   최근 앱
+========================= */
 
-/* 전원 */
-
-#powerOff{
-position:absolute;
-inset:0;
-z-index:250;
-display:none;
-background:black;
-color:white;
-text-align:center;
-padding-top:40vh;
+.recentCard {
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 13px;
+  margin-bottom: 10px;
+  color: white;
 }
 
-#powerButton{
-position:absolute;
-right:0;
-top:90px;
-width:8px;
-height:80px;
-background:#444;
-z-index:400;
+.recentCard button {
+  margin-top: 10px;
+  background: #3478f6;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
 }
 
+/* =========================
+   하단 네비게이션
+========================= */
 
-/* 하단 */
-
-#navigation{
-position:absolute;
-left:0;
-right:0;
-bottom:0;
-height:55px;
-display:flex;
-align-items:center;
-justify-content:space-around;
-background:#111;
-z-index:100;
+#bottomNav {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 70px;
+  background: rgba(20,20,20,0.92);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  z-index: 200;
 }
 
-#navigation button{
-background:transparent;
-color:white;
-font-size:22px;
+#bottomNav button {
+  background: transparent;
+  color: #aaa;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
 }
 
+#bottomNav button span {
+  font-size: 23px;
+}
 
-/* 알림 */
+#bottomNav button small {
+  font-size: 10px;
+}
 
-#toast{
-position:absolute;
-left:50%;
-bottom:70px;
-transform:translateX(-50%);
-display:none;
-padding:10px 16px;
-border-radius:20px;
-background:#222;
-color:white;
-z-index:500;
-white-space:nowrap;
+/* =========================
+   잠금화면
+========================= */
+
+#lockScreen {
+  position: absolute;
+  inset: 0;
+  z-index: 300;
+  background: linear-gradient(160deg, #111, #222);
+  color: white;
+  text-align: center;
+}
+
+.lockTime {
+  font-size: 62px;
+  margin-top: 75px;
+}
+
+.lockDate {
+  color: #bbb;
+}
+
+.lockMessage {
+  margin: 45px 0 15px;
+}
+
+#unlockPin {
+  width: 180px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  font-size: 22px;
+}
+
+#unlockPinButton,
+#verifyLockButton {
+  display: block;
+  margin: 15px auto;
+  padding: 11px 25px;
+  border-radius: 10px;
+  background: #3478f6;
+  color: white;
+}
+
+/* =========================
+   패턴
+========================= */
+
+.patternBoard {
+  position: relative;
+  width: 270px;
+  height: 270px;
+  margin: 20px auto;
+  touch-action: none;
+}
+
+.patternBoard canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.patternBoard i {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 3px solid white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  z-index: 2;
+}
+
+.patternBoard i.active {
+  background: white;
+  box-shadow: 0 0 12px white;
+}
+
+.patternBoard i:nth-of-type(1) { left: 20%; top: 20%; }
+.patternBoard i:nth-of-type(2) { left: 50%; top: 20%; }
+.patternBoard i:nth-of-type(3) { left: 80%; top: 20%; }
+
+.patternBoard i:nth-of-type(4) { left: 20%; top: 50%; }
+.patternBoard i:nth-of-type(5) { left: 50%; top: 50%; }
+.patternBoard i:nth-of-type(6) { left: 80%; top: 50%; }
+
+.patternBoard i:nth-of-type(7) { left: 20%; top: 80%; }
+.patternBoard i:nth-of-type(8) { left: 50%; top: 80%; }
+.patternBoard i:nth-of-type(9) { left: 80%; top: 80%; }
+
+/* =========================
+   오버레이
+========================= */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 600;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.overlayBox {
+  width: 100%;
+  max-width: 360px;
+  background: #202020;
+  color: white;
+  border-radius: 20px;
+  padding: 25px;
+  text-align: center;
+}
+
+.overlayBox input {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: 0;
+  margin: 6px 0;
+  text-align: center;
+}
+
+.overlayBox > button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 12px;
+  border-radius: 10px;
+  background: #3478f6;
+  color: white;
+}
+
+/* =========================
+   빠른 설정
+========================= */
+
+#quickPanel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 260px;
+  padding: 20px;
+  background: rgba(20,20,20,0.97);
+  color: white;
+  z-index: 800;
+  transform: translateY(-100%);
+  transition: transform 0.22s ease;
+  border-radius: 0 0 22px 22px;
+}
+
+#quickPanel.open {
+  transform: translateY(0);
+}
+
+.quickHandle {
+  width: 45px;
+  height: 4px;
+  border-radius: 10px;
+  background: #777;
+  margin: 4px auto 20px;
+}
+
+.brightnessBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.brightnessBox input {
+  flex: 1;
+}
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.quickButton {
+  height: 80px;
+  background: #333;
+  color: white;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.quickButton.active {
+  background: #3478f6;
+}
+
+/* =========================
+   전원
+========================= */
+
+.powerOverlay {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  color: white;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.powerIcon {
+  font-size: 70px;
+}
+
+#powerOnButton {
+  padding: 14px 30px;
+  border-radius: 12px;
+  background: white;
+  color: black;
 }
