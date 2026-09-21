@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#000000">
-  <title>Mini Phone</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<title>Mini Phone</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <div id="phone">
 
-  <!-- 전원 버튼 -->
   <button id="powerButton" aria-label="전원"></button>
 
-  <!-- 상태바 -->
   <div id="statusBar">
     <span id="statusTime">12:00</span>
     <span id="statusIcons">📶 🔋</span>
@@ -23,11 +21,18 @@
 
   <!-- 빠른 설정 -->
   <div id="quickPanel">
+
     <div class="quickHandle"></div>
 
     <div class="brightnessBox">
       <span>☀️</span>
-      <input id="brightness" type="range" min="30" max="100" value="100">
+      <input
+        id="brightness"
+        type="range"
+        min="30"
+        max="100"
+        value="100"
+      >
     </div>
 
     <div class="quickGrid">
@@ -53,43 +58,74 @@
       </button>
 
     </div>
+
   </div>
 
-  <!-- 화면 -->
   <main id="screen">
 
     <!-- 잠금화면 -->
     <section id="lockScreen" class="page hidden">
+
       <div class="lockTime" id="lockTime">12:00</div>
       <div class="lockDate" id="lockDate"></div>
 
       <div id="pinUnlock">
-        <div class="lockMessage">PIN을 입력하세요</div>
-        <input id="unlockPin" type="password" inputmode="numeric" maxlength="6">
-        <button id="unlockPinButton">잠금 해제</button>
+
+        <div class="lockMessage">
+          PIN을 입력하세요
+        </div>
+
+        <input
+          id="unlockPin"
+          type="password"
+          inputmode="numeric"
+          maxlength="6"
+        >
+
+        <button id="unlockPinButton">
+          잠금 해제
+        </button>
+
       </div>
 
       <div id="patternUnlock">
-        <div class="lockMessage">패턴을 그리세요</div>
-        <div class="patternBoard unlockBoard" id="unlockBoard">
+
+        <div class="lockMessage">
+          패턴을 그리세요
+        </div>
+
+        <div
+          class="patternBoard unlockBoard"
+          id="unlockBoard"
+        >
+
           <canvas></canvas>
+
           <i data-index="0"></i>
           <i data-index="1"></i>
           <i data-index="2"></i>
+
           <i data-index="3"></i>
           <i data-index="4"></i>
           <i data-index="5"></i>
+
           <i data-index="6"></i>
           <i data-index="7"></i>
           <i data-index="8"></i>
+
         </div>
+
       </div>
+
     </section>
 
     <!-- 홈 -->
     <section id="homePage" class="page">
 
-      <div class="homeClock" id="homeClock">12:00</div>
+      <div class="homeClock" id="homeClock">
+        12:00
+      </div>
+
       <div class="homeDate" id="homeDate"></div>
 
       <div class="appGrid">
@@ -129,68 +165,130 @@
     </section>
 
     <!-- 전화 -->
-    <section id="phonePage" class="page appPage hidden">
+    <section
+      id="phonePage"
+      class="page appPage hidden"
+    >
+
       <div class="appHeader">
         <button class="backApp">‹</button>
         <h2>전화</h2>
       </div>
 
       <div class="phoneBody">
-        <input id="phoneNumber" type="tel" placeholder="전화번호">
-        <button id="callButton">📞 전화 걸기</button>
+
+        <input
+          id="phoneNumber"
+          type="tel"
+          placeholder="전화번호"
+        >
+
+        <button id="callButton">
+          📞 전화 걸기
+        </button>
+
         <div id="callResult"></div>
+
       </div>
+
     </section>
 
     <!-- 카메라 -->
-    <section id="cameraPage" class="page appPage hidden">
+    <section
+      id="cameraPage"
+      class="page appPage hidden"
+    >
+
       <div class="appHeader">
         <button class="backApp">‹</button>
         <h2>카메라</h2>
       </div>
 
       <div class="cameraBody">
-        <video id="cameraVideo" autoplay playsinline></video>
+
+        <video
+          id="cameraVideo"
+          autoplay
+          playsinline
+        ></video>
+
         <canvas id="photoCanvas"></canvas>
 
         <div class="cameraControls">
-          <button id="startCamera">카메라 켜기</button>
-          <button id="takePhoto">●</button>
-          <button id="stopCamera">카메라 끄기</button>
+
+          <button id="startCamera">
+            카메라 켜기
+          </button>
+
+          <button id="takePhoto">
+            ●
+          </button>
+
+          <button id="stopCamera">
+            카메라 끄기
+          </button>
+
         </div>
+
       </div>
+
     </section>
 
     <!-- 갤러리 -->
-    <section id="galleryPage" class="page appPage hidden">
+    <section
+      id="galleryPage"
+      class="page appPage hidden"
+    >
+
       <div class="appHeader">
         <button class="backApp">‹</button>
         <h2>갤러리</h2>
       </div>
 
-      <button id="deleteAllPhotos" class="dangerButton">
+      <button
+        id="deleteAllPhotos"
+        class="dangerButton"
+      >
         전체 삭제
       </button>
 
       <div id="galleryGrid"></div>
+
     </section>
 
     <!-- 사진 확대 -->
-    <div id="photoViewer" class="hidden">
-      <button id="closePhotoViewer">×</button>
+    <div
+      id="photoViewer"
+      class="hidden"
+    >
+
+      <button id="closePhotoViewer">
+        ×
+      </button>
+
       <img id="viewerImage">
-      <button id="deleteCurrentPhoto">삭제</button>
+
+      <button id="deleteCurrentPhoto">
+        삭제
+      </button>
+
     </div>
 
     <!-- 메모 -->
-    <section id="memoPage" class="page appPage hidden">
+    <section
+      id="memoPage"
+      class="page appPage hidden"
+    >
 
       <div class="appHeader">
         <button class="backApp">‹</button>
         <h2>메모</h2>
       </div>
 
-      <button id="newMemoButton" class="primaryButton">
+      <button
+        id="newMemoButton"
+        class="primaryButton"
+      >
         ＋ 새 메모
       </button>
 
@@ -199,38 +297,76 @@
     </section>
 
     <!-- 메모 편집 -->
-    <section id="memoEditPage" class="page appPage hidden">
+    <section
+      id="memoEditPage"
+      class="page appPage hidden"
+    >
 
       <div class="appHeader">
         <button id="memoEditBack">‹</button>
         <h2>메모 작성</h2>
       </div>
 
-      <input id="memoTitle" placeholder="제목">
-      <textarea id="memoContent" placeholder="내용을 입력하세요"></textarea>
+      <input
+        id="memoTitle"
+        placeholder="제목"
+      >
+
+      <textarea
+        id="memoContent"
+        placeholder="내용을 입력하세요"
+      ></textarea>
 
       <div class="memoEditButtons">
-        <button id="saveMemo" class="primaryButton">저장</button>
-        <button id="deleteMemo" class="dangerButton">삭제</button>
+
+        <button
+          id="saveMemo"
+          class="primaryButton"
+        >
+          저장
+        </button>
+
+        <button
+          id="deleteMemo"
+          class="dangerButton"
+        >
+          삭제
+        </button>
+
       </div>
 
     </section>
 
     <!-- 시계 -->
-    <section id="clockPage" class="page appPage hidden">
+    <section
+      id="clockPage"
+      class="page appPage hidden"
+    >
 
       <div class="appHeader">
         <button class="backApp">‹</button>
         <h2>시계</h2>
       </div>
 
-      <div class="bigClock" id="bigClock">12:00:00</div>
-      <div class="bigDate" id="bigDate"></div>
+      <div
+        class="bigClock"
+        id="bigClock"
+      >
+        12:00:00
+      </div>
+
+      <div
+        class="bigDate"
+        id="bigDate"
+      ></div>
 
     </section>
 
     <!-- 설정 -->
-    <section id="settingsPage" class="page appPage hidden">
+    <section
+      id="settingsPage"
+      class="page appPage hidden"
+    >
 
       <div class="appHeader">
         <button class="backApp">‹</button>
@@ -238,31 +374,68 @@
       </div>
 
       <div class="settingItem">
-        <strong>잠금 설정</strong>
-        <span id="lockStatus">잠금 없음</span>
+
+        <strong>
+          잠금 설정
+        </strong>
+
+        <span id="lockStatus">
+          잠금 없음
+        </span>
 
         <div class="settingButtons">
-          <button id="setPin">PIN 설정</button>
-          <button id="setPattern">패턴 설정</button>
-          <button id="removeLock">잠금 해제</button>
+
+          <button id="setPin">
+            PIN 설정
+          </button>
+
+          <button id="setPattern">
+            패턴 설정
+          </button>
+
+          <button id="removeLock">
+            잠금 해제
+          </button>
+
         </div>
+
       </div>
 
       <div class="settingItem">
-        <strong>배경화면</strong>
+
+        <strong>
+          배경화면
+        </strong>
 
         <div class="backgroundButtons">
-          <button data-bg="default">기본</button>
-          <button data-bg="blue">파랑</button>
-          <button data-bg="purple">보라</button>
-          <button data-bg="green">초록</button>
+
+          <button data-bg="default">
+            기본
+          </button>
+
+          <button data-bg="blue">
+            파랑
+          </button>
+
+          <button data-bg="purple">
+            보라
+          </button>
+
+          <button data-bg="green">
+            초록
+          </button>
+
         </div>
+
       </div>
 
     </section>
 
     <!-- 최근 앱 -->
-    <section id="recentPage" class="page appPage hidden">
+    <section
+      id="recentPage"
+      class="page appPage hidden"
+    >
 
       <div class="appHeader">
         <h2>최근 앱</h2>
@@ -270,7 +443,10 @@
 
       <div id="recentList"></div>
 
-      <button id="clearRecent" class="dangerButton">
+      <button
+        id="clearRecent"
+        class="dangerButton"
+      >
         최근 앱 모두 지우기
       </button>
 
@@ -278,12 +454,17 @@
 
   </main>
 
-  <!-- 잠금 설정 PIN -->
-  <div id="pinSetupOverlay" class="overlay hidden">
+  <!-- PIN 설정 -->
+  <div
+    id="pinSetupOverlay"
+    class="overlay hidden"
+  >
 
     <div class="overlayBox">
 
-      <h2 id="pinSetupTitle">PIN 설정</h2>
+      <h2 id="pinSetupTitle">
+        PIN 설정
+      </h2>
 
       <p id="pinSetupDescription">
         사용할 PIN을 입력하세요.
@@ -305,21 +486,34 @@
         placeholder="PIN 다시 입력"
       >
 
-      <button id="confirmPinSetup">확인</button>
+      <button id="confirmPinSetup">
+        확인
+      </button>
 
     </div>
 
   </div>
 
   <!-- 패턴 설정 -->
-  <div id="patternSetupOverlay" class="overlay hidden">
+  <div
+    id="patternSetupOverlay"
+    class="overlay hidden"
+  >
 
     <div class="overlayBox">
 
-      <h2>패턴 설정</h2>
-      <p>점을 드래그하여 연결하세요.</p>
+      <h2>
+        패턴 설정
+      </h2>
 
-      <div class="patternBoard setupBoard" id="setupBoard">
+      <p>
+        점을 드래그하여 연결하세요.
+      </p>
+
+      <div
+        class="patternBoard setupBoard"
+        id="setupBoard"
+      >
 
         <canvas></canvas>
 
@@ -337,19 +531,29 @@
 
       </div>
 
-      <button id="confirmPattern">패턴 저장</button>
+      <button id="confirmPattern">
+        패턴 저장
+      </button>
 
     </div>
 
   </div>
 
   <!-- 현재 잠금 확인 -->
-  <div id="verifyLockOverlay" class="overlay hidden">
+  <div
+    id="verifyLockOverlay"
+    class="overlay hidden"
+  >
 
     <div class="overlayBox">
 
-      <h2>현재 잠금 확인</h2>
-      <p>현재 설정된 잠금을 입력하세요.</p>
+      <h2>
+        현재 잠금 확인
+      </h2>
+
+      <p>
+        현재 설정된 잠금을 입력하세요.
+      </p>
 
       <input
         id="verifyPin"
@@ -359,7 +563,10 @@
         placeholder="PIN"
       >
 
-      <div class="patternBoard verifyBoard hidden" id="verifyBoard">
+      <div
+        class="patternBoard verifyBoard hidden"
+        id="verifyBoard"
+      >
 
         <canvas></canvas>
 
@@ -377,22 +584,20 @@
 
       </div>
 
-      <button id="verifyLockButton">확인</button>
+      <button id="verifyLockButton">
+        확인
+      </button>
 
     </div>
 
   </div>
 
-  <!-- 전원 종료 -->
-  <div id="powerOffOverlay" class="powerOverlay hidden">
-
-    <div>
-      <div class="powerIcon">⏻</div>
-      <h2>전원이 꺼졌습니다.</h2>
-      <button id="powerOnButton">전원 켜기</button>
-    </div>
-
-  </div>
+  <!-- 전원이 꺼졌을 때는 완전히 검은 화면 -->
+  <div
+    id="powerOffOverlay"
+    class="powerOverlay hidden"
+    aria-hidden="true"
+  ></div>
 
   <!-- 하단 네비게이션 -->
   <nav id="bottomNav">
