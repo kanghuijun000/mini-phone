@@ -305,6 +305,20 @@ function renderRecent() {
 
         showPage(pageId);
 
+      }
+    );
+
+    box.appendChild(card);
+
+  });
+
+}      "click",
+      () => {
+
+        vibrate();
+
+        showPage(pageId);
+
         if (pageId === "galleryPage") {
           renderGallery();
         }
@@ -422,11 +436,9 @@ function stopCamera() {
   $("cameraVideo").srcObject = null;
 
   if (state.flashlight) {
-
     state.flashlight = false;
 
     $("flashButton").classList.remove("active");
-
   }
 
 }
@@ -598,14 +610,7 @@ $("deleteAllPhotos")
 
     localStorage.removeItem(
       STORAGE.photos
-    );
-
-    renderGallery();
-
-  });
-
-
-$("closePhotoViewer")
+    );$("closePhotoViewer")
   .addEventListener("click", () => {
 
     vibrate();
@@ -896,6 +901,42 @@ function openPinSetup() {
     .classList
     .remove("hidden");
 
+}/* =========================================
+   PIN
+   ========================================= */
+
+$("setPin").addEventListener("click", () => {
+
+  vibrate();
+
+  if (getLockType()) {
+
+    beginVerifyLock("pin");
+
+  } else {
+
+    openPinSetup();
+
+  }
+
+});
+
+
+function openPinSetup() {
+
+  $("pinSetupTitle").textContent =
+    "PIN 설정";
+
+  $("pinSetupDescription").textContent =
+    "4~6자리 PIN을 입력하세요.";
+
+  $("setupPinInput").value = "";
+  $("setupPinConfirm").value = "";
+
+  $("pinSetupOverlay")
+    .classList
+    .remove("hidden");
+
 }
 
 
@@ -1050,104 +1091,120 @@ function unlockPhone() {
 let verifyAction = null;
 
 
-function beginVerifyLock(action) {
+function beginVerifyLock(type) {
 
-  verifyAction = action;
+  verifyAction = () => {
 
-  $("verifyPin").value = "";
+    if (type === "pin") {
 
-  const type = getLockType();
+      $("unlockPinTitle").textContent =
+        "현재 PIN 입력";
 
-  if (type === "pin") {
+      $("unlockPin")
+        .classList
+        .remove("hidden");
 
-    $("verifyPin")
-      .classList
-      .remove("hidden");
+      $("unlockPinButton")
+        .classList
+        .remove("hidden");
 
-    $("verifyBoard")
-      .classList
-      .add("hidden");
+      $("unlockPatternBoard")
+        .classList
+        .add("hidden");
 
-  } else {
+      $("lockVerifyOverlay")
+        .classList
+        .remove("hidden");
 
-    $("verifyPin")
-      .classList
-      .add("hidden");
+    }
 
-    $("verifyBoard")
-      .classList
-      .remove("hidden");
+    if (type === "pattern") {
 
-    verifyPattern.reset();
+      $("unlockPin")
+        .classList
+        .add("hidden");
 
-  }
+      $("unlockPinButton")
+        .classList
+        .add("hidden");
 
-  $("verifyLockOverlay")
-    .classList
-    .remove("hidden");
+      $("unlockPatternBoard")
+        .classList
+        .remove("hidden");
+
+      verifyPattern.reset();
+
+      $("lockVerifyOverlay")
+        .classList
+        .remove("hidden");
+
+    }
+
+  };
+
+  verifyAction();
 
 }
 
 
-$("verifyLockButton")
+$("closeLockVerify")
   .addEventListener("click", () => {
 
     vibrate();
 
-    let correct = false;
+    $("lockVerifyOverlay")
+      .classList
+      .add("hidden");
 
-    if (getLockType() === "pin") {
+    verifyAction = null;
 
-      correct =
-        $("verifyPin").value ===
-        getLockValue();
+  });
+
+
+/* =========================================
+   PIN으로 잠금 변경
+   ========================================= */
+
+$("changeLockType")
+  .addEventListener("click", () => {
+
+    vibrate();
+
+    const type = getLockType();
+
+    if (type === "pin") {
+
+      openPinSetup();
 
     } else {
 
-      correct =
-        verifyPattern.getPattern() ===
-        getLockValue();
-
-    }
-
-    if (correct) {
-
-      finishVerifyAction();
-
-    } else {
-
-      $("verifyPin").value = "";
-
-      verifyPattern.reset();
-
-      alert(
-        "현재 잠금이 올바르지 않습니다."
-      );
+      openPatternSetup();
 
     }
 
   });
 
 
-function finishVerifyAction() {
+$("removeLock")
+  .addEventListener("click", () => {
 
-  $("verifyLockOverlay")
-    .classList
-    .add("hidden");
+    vibrate();
 
-  if (verifyAction === "pin") {
+    if (!getLockType()) {
 
-    openPinSetup();
+      alert("현재 설정된 잠금이 없습니다.");
 
-  } else if (
-    verifyAction === "pattern"
-  ) {
+      return;
+    }
 
-    openPatternSetup();
+    if (
+      !confirm(
+        "잠금 설정을 삭제할까요?"
+      )
+    ) {
 
-  } else if (
-    verifyAction === "remove"
-  ) {
+      return;
+    }
 
     localStorage.removeItem(
       STORAGE.lockType
@@ -1159,335 +1216,9 @@ function finishVerifyAction() {
 
     updateLockStatus();
 
-    alert(
-      "잠금이 해제되었습니다."
-    );
+    alert("잠금이 삭제되었습니다.");
 
-  }
-
-}
-
-
-/* =========================================
-   잠금 제거
-   ========================================= */
-
-$("removeLock")
-  .addEventListener("click", () => {
-
-    vibrate();
-
-    if (!getLockType()) {
-
-      alert(
-        "현재 설정된 잠금이 없습니다."
-      );
-
-      return;
-    }
-
-    beginVerifyLock("remove");
-
-  });
-
-
-/* =========================================
-   패턴 엔진
-   ========================================= */
-
-function createPatternBoard(boardElement) {
-
-  const canvas =
-    boardElement.querySelector("canvas");
-
-  const ctx =
-    canvas.getContext("2d");
-
-  let pattern = [];
-
-  let drawing = false;
-
-  let pointer = {
-    x: 0,
-    y: 0
-  };
-
-
-  function resizeCanvas() {
-
-    const rect =
-      boardElement.getBoundingClientRect();
-
-    const dpr =
-      window.devicePixelRatio || 1;
-
-    canvas.width =
-      rect.width * dpr;
-
-    canvas.height =
-      rect.height * dpr;
-
-    canvas.style.width =
-      rect.width + "px";
-
-    canvas.style.height =
-      rect.height + "px";
-
-    ctx.setTransform(
-      dpr,
-      0,
-      0,
-      dpr,
-      0,
-      0
-    );
-
-    draw();
-
-  }
-
-
-  function position(event) {
-
-    const rect =
-      boardElement.getBoundingClientRect();
-
-    return {
-      x:
-        event.clientX -
-        rect.left,
-
-      y:
-        event.clientY -
-        rect.top
-    };
-
-  }
-
-
-  function getDot(index) {
-
-    return boardElement.querySelector(
-      `i[data-index="${index}"]`
-    );
-
-  }
-
-
-  function findDot(x, y) {
-
-    const rect =
-      boardElement.getBoundingClientRect();
-
-    const dots =
-      [
-        ...boardElement
-          .querySelectorAll("i")
-      ];
-
-    for (const dot of dots) {
-
-      const dotRect =
-        dot.getBoundingClientRect();
-
-      const dx =
-        x -
-        (
-          dotRect.left -
-          rect.left +
-          dotRect.width / 2
-        );
-
-      const dy =
-        y -
-        (
-          dotRect.top -
-          rect.top +
-          dotRect.height / 2
-        );
-
-      const distance =
-        Math.sqrt(
-          dx * dx +
-          dy * dy
-        );
-
-      if (distance < 28) {
-
-        return Number(
-          dot.dataset.index
-        );
-
-      }
-
-    }
-
-    return null;
-
-  }
-
-
-  function addDot(index) {
-
-    if (index === null) {
-      return;
-    }
-
-    if (pattern.includes(index)) {
-      return;
-    }
-
-    pattern.push(index);
-
-    const dot =
-      getDot(index);
-
-    if (dot) {
-      dot.classList.add("active");
-    }
-
-    draw();
-
-  }
-
-
-  function draw() {
-
-    ctx.clearRect(
-      0,
-      0,
-      boardElement.clientWidth,
-      boardElement.clientHeight
-    );
-
-    if (pattern.length === 0) {
-      return;
-    }
-
-    const rect =
-      boardElement.getBoundingClientRect();
-
-    ctx.beginPath();
-
-    pattern.forEach(
-      (index, positionIndex) => {
-
-        const dot =
-          getDot(index);
-
-        if (!dot) {
-          return;
-        }
-
-        const dotRect =
-          dot.getBoundingClientRect();
-
-        const x =
-          dotRect.left -
-          rect.left +
-          dotRect.width / 2;
-
-        const y =
-          dotRect.top -
-          rect.top +
-          dotRect.height / 2;
-
-        if (positionIndex === 0) {
-
-          ctx.moveTo(x, y);
-
-        } else {
-
-          ctx.lineTo(x, y);
-
-        }
-
-      }
-    );
-
-    if (drawing) {
-
-      ctx.lineTo(
-        pointer.x,
-        pointer.y
-      );
-
-    }
-
-    ctx.lineWidth = 6;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "#ffffff";
-
-    ctx.stroke();
-
-  }
-
-
-  function start(event) {
-
-    event.preventDefault();
-
-    drawing = true;
-
-    pattern = [];
-
-    boardElement
-      .querySelectorAll("i")
-      .forEach(
-        dot =>
-          dot.classList.remove(
-            "active"
-          )
-      );
-
-    pointer =
-      position(event);
-
-    addDot(
-      findDot(
-        pointer.x,
-        pointer.y
-      )
-    );
-
-    try {
-
-      boardElement.setPointerCapture(
-        event.pointerId
-      );
-
-    } catch {}
-
-    draw();
-
-  }
-
-
-  function move(event) {
-
-    if (!drawing) {
-      return;
-    }
-
-    event.preventDefault();
-
-    pointer =
-      position(event);
-
-    addDot(
-      findDot(
-        pointer.x,
-        pointer.y
-      )
-    );
-
-    draw();
-
-  }
-
-
-  function end() {
+  });  function end() {
 
     if (!drawing) {
       return;
@@ -1795,10 +1526,7 @@ applyBackground(
   localStorage.getItem(
     STORAGE.background
   ) || "default"
-);
-
-
-/* =========================================
+);/* =========================================
    빠른 설정
    ========================================= */
 
@@ -2149,10 +1877,7 @@ $("soundButton")
   );
 
 
-updateSoundUI();
-
-
-/* =========================================
+updateSoundUI();/* =========================================
    손전등
    ========================================= */
 
@@ -2344,4 +2069,254 @@ updateLockStatus();
 
 showPage("homePage");
 
-showLockScreen();
+showLockScreen();/* =========================================
+   빠른 설정 / 하단 네비게이션 안정화
+   ========================================= */
+
+(() => {
+
+  const phone =
+    document.getElementById("phone");
+
+  const screen =
+    document.getElementById("screen");
+
+  const quickPanel =
+    document.getElementById("quickPanel");
+
+  const bottomNav =
+    document.getElementById("bottomNav");
+
+
+  if (!phone) {
+    return;
+  }
+
+
+  /*
+    하단 네비게이션이 화면에
+    제대로 표시되고 눌리도록 설정
+  */
+
+  if (bottomNav) {
+
+    bottomNav.style.zIndex = "900";
+
+    bottomNav.style.pointerEvents =
+      "auto";
+
+  }
+
+
+  /*
+    빠른 설정창은 열렸을 때만
+    터치 가능하도록 설정
+  */
+
+  if (quickPanel) {
+
+    quickPanel.style.zIndex = "850";
+
+    quickPanel.style.pointerEvents =
+      "none";
+
+  }
+
+
+  if (screen) {
+
+    screen.style.zIndex = "1";
+
+  }
+
+
+  let startY = null;
+
+
+  /*
+    위에서 아래로 스와이프
+  */
+
+  phone.addEventListener(
+    "pointerdown",
+    event => {
+
+      if (
+        typeof state !== "undefined" &&
+        state.isPoweredOff
+      ) {
+        return;
+      }
+
+
+      if (
+        event.target.closest(
+          "#powerButton"
+        ) ||
+        event.target.closest(
+          "#quickPanel"
+        ) ||
+        event.target.closest(
+          "#bottomNav"
+        ) ||
+        event.target.closest(
+          ".overlay"
+        ) ||
+        event.target.closest(
+          "#photoViewer"
+        )
+      ) {
+
+        return;
+      }
+
+
+      startY =
+        event.clientY;
+
+    },
+    true
+  );
+
+
+  phone.addEventListener(
+    "pointerup",
+    event => {
+
+      if (
+        typeof state !== "undefined" &&
+        state.isPoweredOff
+      ) {
+
+        startY = null;
+
+        return;
+      }
+
+
+      if (startY === null) {
+        return;
+      }
+
+
+      const difference =
+        event.clientY - startY;
+
+
+      const panelOpen =
+        quickPanel &&
+        quickPanel.classList.contains(
+          "open"
+        );
+
+
+      if (
+        !panelOpen &&
+        startY <= 70 &&
+        difference >= 50
+      ) {
+
+        if (
+          typeof openQuickPanel ===
+          "function"
+        ) {
+
+          openQuickPanel();
+
+        }
+
+      } else if (
+        panelOpen &&
+        difference <= -50
+      ) {
+
+        if (
+          typeof closeQuickPanel ===
+          "function"
+        ) {
+
+          closeQuickPanel();
+
+        }
+
+      }
+
+
+      startY = null;
+
+    },
+    true
+  );
+
+
+  phone.addEventListener(
+    "pointercancel",
+    () => {
+
+      startY = null;
+
+    },
+    true
+  );
+
+
+  /*
+    빠른 설정창이 열렸을 때만
+    내부 버튼을 누를 수 있도록 함
+  */
+
+  if (quickPanel) {
+
+    const observer =
+      new MutationObserver(() => {
+
+        quickPanel.style.pointerEvents =
+          quickPanel.classList.contains(
+            "open"
+          )
+            ? "auto"
+            : "none";
+
+      });
+
+
+    observer.observe(
+      quickPanel,
+      {
+        attributes: true,
+        attributeFilter: ["class"]
+      }
+    );
+
+  }
+
+
+  /*
+    하단 네비게이션 버튼 터치 보장
+  */
+
+  [
+    "homeNav",
+    "recentNav",
+    "backNav"
+  ].forEach(id => {
+
+    const button =
+      document.getElementById(id);
+
+    if (!button) {
+      return;
+    }
+
+    button.style.pointerEvents =
+      "auto";
+
+    button.style.position =
+      "relative";
+
+    button.style.zIndex =
+      "1";
+
+  });
+
+})();
