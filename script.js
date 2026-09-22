@@ -192,34 +192,40 @@ document.querySelectorAll(".backApp").forEach(button => {
    하단 네비게이션
    ========================================= */
 
-$("homeNav").addEventListener("click", () => {
+function handleNavAction(action) {
+  if (state.isPoweredOff) return;
 
   vibrate();
 
-  showPage("homePage");
-
-});
-
-
-$("recentNav").addEventListener("click", () => {
-
-  vibrate();
-
-  renderRecent();
-
-  showPage("recentPage");
-
-});
-
-
-$("backNav").addEventListener("click", () => {
-
-  vibrate();
-
-  if (state.currentPage !== "homePage") {
+  if (action === "home") {
     showPage("homePage");
+    return;
   }
 
+  if (action === "recent") {
+    renderRecent();
+    showPage("recentPage");
+    return;
+  }
+
+  if (action === "back" && state.currentPage !== "homePage") {
+    showPage("homePage");
+  }
+}
+
+$("homeNav").addEventListener("click", event => {
+  event.stopPropagation();
+  handleNavAction("home");
+});
+
+$("recentNav").addEventListener("click", event => {
+  event.stopPropagation();
+  handleNavAction("recent");
+});
+
+$("backNav").addEventListener("click", event => {
+  event.stopPropagation();
+  handleNavAction("back");
 });
 
 
@@ -299,20 +305,6 @@ function renderRecent() {
 
     card.querySelector("button").addEventListener(
       "click",
-      () => {
-
-        vibrate();
-
-        showPage(pageId);
-
-      }
-    );
-
-    box.appendChild(card);
-
-  });
-
-}      "click",
       () => {
 
         vibrate();
@@ -436,9 +428,11 @@ function stopCamera() {
   $("cameraVideo").srcObject = null;
 
   if (state.flashlight) {
+
     state.flashlight = false;
 
     $("flashButton").classList.remove("active");
+
   }
 
 }
@@ -610,7 +604,14 @@ $("deleteAllPhotos")
 
     localStorage.removeItem(
       STORAGE.photos
-    );$("closePhotoViewer")
+    );
+
+    renderGallery();
+
+  });
+
+
+$("closePhotoViewer")
   .addEventListener("click", () => {
 
     vibrate();
@@ -835,8 +836,6 @@ $("deleteMemo")
     renderMemos();
 
   });
-
-
 /* =========================================
    잠금 상태
    ========================================= */
@@ -866,42 +865,6 @@ function updateLockStatus() {
 
 
 /* =========================================
-   PIN
-   ========================================= */
-
-$("setPin").addEventListener("click", () => {
-
-  vibrate();
-
-  if (getLockType()) {
-
-    beginVerifyLock("pin");
-
-  } else {
-
-    openPinSetup();
-
-  }
-
-});
-
-
-function openPinSetup() {
-
-  $("pinSetupTitle").textContent =
-    "PIN 설정";
-
-  $("pinSetupDescription").textContent =
-    "4~6자리 PIN을 입력하세요.";
-
-  $("setupPinInput").value = "";
-  $("setupPinConfirm").value = "";
-
-  $("pinSetupOverlay")
-    .classList
-    .remove("hidden");
-
-}/* =========================================
    PIN
    ========================================= */
 
@@ -1091,120 +1054,104 @@ function unlockPhone() {
 let verifyAction = null;
 
 
-function beginVerifyLock(type) {
+function beginVerifyLock(action) {
 
-  verifyAction = () => {
+  verifyAction = action;
 
-    if (type === "pin") {
+  $("verifyPin").value = "";
 
-      $("unlockPinTitle").textContent =
-        "현재 PIN 입력";
+  const type = getLockType();
 
-      $("unlockPin")
-        .classList
-        .remove("hidden");
+  if (type === "pin") {
 
-      $("unlockPinButton")
-        .classList
-        .remove("hidden");
+    $("verifyPin")
+      .classList
+      .remove("hidden");
 
-      $("unlockPatternBoard")
-        .classList
-        .add("hidden");
+    $("verifyBoard")
+      .classList
+      .add("hidden");
 
-      $("lockVerifyOverlay")
-        .classList
-        .remove("hidden");
+  } else {
 
-    }
+    $("verifyPin")
+      .classList
+      .add("hidden");
 
-    if (type === "pattern") {
+    $("verifyBoard")
+      .classList
+      .remove("hidden");
 
-      $("unlockPin")
-        .classList
-        .add("hidden");
+    verifyPattern.reset();
 
-      $("unlockPinButton")
-        .classList
-        .add("hidden");
+  }
 
-      $("unlockPatternBoard")
-        .classList
-        .remove("hidden");
-
-      verifyPattern.reset();
-
-      $("lockVerifyOverlay")
-        .classList
-        .remove("hidden");
-
-    }
-
-  };
-
-  verifyAction();
+  $("verifyLockOverlay")
+    .classList
+    .remove("hidden");
 
 }
 
 
-$("closeLockVerify")
+$("verifyLockButton")
   .addEventListener("click", () => {
 
     vibrate();
 
-    $("lockVerifyOverlay")
-      .classList
-      .add("hidden");
+    let correct = false;
 
-    verifyAction = null;
+    if (getLockType() === "pin") {
 
-  });
-
-
-/* =========================================
-   PIN으로 잠금 변경
-   ========================================= */
-
-$("changeLockType")
-  .addEventListener("click", () => {
-
-    vibrate();
-
-    const type = getLockType();
-
-    if (type === "pin") {
-
-      openPinSetup();
+      correct =
+        $("verifyPin").value ===
+        getLockValue();
 
     } else {
 
-      openPatternSetup();
+      correct =
+        verifyPattern.getPattern() ===
+        getLockValue();
+
+    }
+
+    if (correct) {
+
+      finishVerifyAction();
+
+    } else {
+
+      $("verifyPin").value = "";
+
+      verifyPattern.reset();
+
+      alert(
+        "현재 잠금이 올바르지 않습니다."
+      );
 
     }
 
   });
 
 
-$("removeLock")
-  .addEventListener("click", () => {
+function finishVerifyAction() {
 
-    vibrate();
+  $("verifyLockOverlay")
+    .classList
+    .add("hidden");
 
-    if (!getLockType()) {
+  if (verifyAction === "pin") {
 
-      alert("현재 설정된 잠금이 없습니다.");
+    openPinSetup();
 
-      return;
-    }
+  } else if (
+    verifyAction === "pattern"
+  ) {
 
-    if (
-      !confirm(
-        "잠금 설정을 삭제할까요?"
-      )
-    ) {
+    openPatternSetup();
 
-      return;
-    }
+  } else if (
+    verifyAction === "remove"
+  ) {
 
     localStorage.removeItem(
       STORAGE.lockType
@@ -1216,9 +1163,335 @@ $("removeLock")
 
     updateLockStatus();
 
-    alert("잠금이 삭제되었습니다.");
+    alert(
+      "잠금이 해제되었습니다."
+    );
 
-  });  function end() {
+  }
+
+}
+
+
+/* =========================================
+   잠금 제거
+   ========================================= */
+
+$("removeLock")
+  .addEventListener("click", () => {
+
+    vibrate();
+
+    if (!getLockType()) {
+
+      alert(
+        "현재 설정된 잠금이 없습니다."
+      );
+
+      return;
+    }
+
+    beginVerifyLock("remove");
+
+  });
+
+
+/* =========================================
+   패턴 엔진
+   ========================================= */
+
+function createPatternBoard(boardElement) {
+
+  const canvas =
+    boardElement.querySelector("canvas");
+
+  const ctx =
+    canvas.getContext("2d");
+
+  let pattern = [];
+
+  let drawing = false;
+
+  let pointer = {
+    x: 0,
+    y: 0
+  };
+
+
+  function resizeCanvas() {
+
+    const rect =
+      boardElement.getBoundingClientRect();
+
+    const dpr =
+      window.devicePixelRatio || 1;
+
+    canvas.width =
+      rect.width * dpr;
+
+    canvas.height =
+      rect.height * dpr;
+
+    canvas.style.width =
+      rect.width + "px";
+
+    canvas.style.height =
+      rect.height + "px";
+
+    ctx.setTransform(
+      dpr,
+      0,
+      0,
+      dpr,
+      0,
+      0
+    );
+
+    draw();
+
+  }
+
+
+  function position(event) {
+
+    const rect =
+      boardElement.getBoundingClientRect();
+
+    return {
+      x:
+        event.clientX -
+        rect.left,
+
+      y:
+        event.clientY -
+        rect.top
+    };
+
+  }
+
+
+  function getDot(index) {
+
+    return boardElement.querySelector(
+      `i[data-index="${index}"]`
+    );
+
+  }
+
+
+  function findDot(x, y) {
+
+    const rect =
+      boardElement.getBoundingClientRect();
+
+    const dots =
+      [
+        ...boardElement
+          .querySelectorAll("i")
+      ];
+
+    for (const dot of dots) {
+
+      const dotRect =
+        dot.getBoundingClientRect();
+
+      const dx =
+        x -
+        (
+          dotRect.left -
+          rect.left +
+          dotRect.width / 2
+        );
+
+      const dy =
+        y -
+        (
+          dotRect.top -
+          rect.top +
+          dotRect.height / 2
+        );
+
+      const distance =
+        Math.sqrt(
+          dx * dx +
+          dy * dy
+        );
+
+      if (distance < 28) {
+
+        return Number(
+          dot.dataset.index
+        );
+
+      }
+
+    }
+
+    return null;
+
+  }
+
+
+  function addDot(index) {
+
+    if (index === null) {
+      return;
+    }
+
+    if (pattern.includes(index)) {
+      return;
+    }
+
+    pattern.push(index);
+
+    const dot =
+      getDot(index);
+
+    if (dot) {
+      dot.classList.add("active");
+    }
+
+    draw();
+
+  }
+
+
+  function draw() {
+
+    ctx.clearRect(
+      0,
+      0,
+      boardElement.clientWidth,
+      boardElement.clientHeight
+    );
+
+    if (pattern.length === 0) {
+      return;
+    }
+
+    const rect =
+      boardElement.getBoundingClientRect();
+
+    ctx.beginPath();
+
+    pattern.forEach(
+      (index, positionIndex) => {
+
+        const dot =
+          getDot(index);
+
+        if (!dot) {
+          return;
+        }
+
+        const dotRect =
+          dot.getBoundingClientRect();
+
+        const x =
+          dotRect.left -
+          rect.left +
+          dotRect.width / 2;
+
+        const y =
+          dotRect.top -
+          rect.top +
+          dotRect.height / 2;
+
+        if (positionIndex === 0) {
+
+          ctx.moveTo(x, y);
+
+        } else {
+
+          ctx.lineTo(x, y);
+
+        }
+
+      }
+    );
+
+    if (drawing) {
+
+      ctx.lineTo(
+        pointer.x,
+        pointer.y
+      );
+
+    }
+
+    ctx.lineWidth = 6;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#ffffff";
+
+    ctx.stroke();
+
+  }
+
+
+  function start(event) {
+
+    event.preventDefault();
+
+    drawing = true;
+
+    pattern = [];
+
+    boardElement
+      .querySelectorAll("i")
+      .forEach(
+        dot =>
+          dot.classList.remove(
+            "active"
+          )
+      );
+
+    pointer =
+      position(event);
+
+    addDot(
+      findDot(
+        pointer.x,
+        pointer.y
+      )
+    );
+
+    try {
+
+      boardElement.setPointerCapture(
+        event.pointerId
+      );
+
+    } catch {}
+
+    draw();
+
+  }
+
+
+  function move(event) {
+
+    if (!drawing) {
+      return;
+    }
+
+    event.preventDefault();
+
+    pointer =
+      position(event);
+
+    addDot(
+      findDot(
+        pointer.x,
+        pointer.y
+      )
+    );
+
+    draw();
+
+  }
+
+
+  function end() {
 
     if (!drawing) {
       return;
@@ -1305,10 +1578,12 @@ const patternSetup =
     $("setupBoard")
   );
 
+
 const verifyPattern =
   createPatternBoard(
     $("verifyBoard")
   );
+
 
 const unlockPattern =
   createPatternBoard(
@@ -1526,152 +1801,211 @@ applyBackground(
   localStorage.getItem(
     STORAGE.background
   ) || "default"
-);/* =========================================
+);
+/* =========================================
    빠른 설정
    ========================================= */
 
-const quickPanel =
-  $("quickPanel");
+const quickPanel = $("quickPanel");
 
 let gestureStartY = null;
 let gestureActive = false;
+let gestureSource = null;
+let gestureHandled = false;
 
 
 function openQuickPanel() {
 
-  if (state.isPoweredOff) {
-    return;
-  }
+  if (state.isPoweredOff) return;
 
-  quickPanel
-    .classList
-    .add("open");
+  quickPanel.classList.add("open");
 
 }
 
 
 function closeQuickPanel() {
 
-  quickPanel
-    .classList
-    .remove("open");
+  quickPanel.classList.remove("open");
 
 }
 
 
-/*
-  화면 최상단에서 아래로 스와이프
-  빠른 설정창에서 위로 스와이프
-*/
+function resetGesture() {
 
-$("phone")
-  .addEventListener(
-    "pointerdown",
-    event => {
+  gestureStartY = null;
+  gestureActive = false;
+  gestureSource = null;
+  gestureHandled = false;
 
-      if (state.isPoweredOff) {
-        return;
-      }
-
-      if (
-        event.target.closest(
-          "#powerButton"
-        ) ||
-        event.target.closest(
-          "#quickPanel"
-        ) ||
-        event.target.closest(
-          "#bottomNav"
-        ) ||
-        event.target.closest(
-          ".overlay"
-        ) ||
-        event.target.closest(
-          "#photoViewer"
-        )
-      ) {
-
-        return;
-      }
-
-      gestureStartY =
-        event.clientY;
-
-      gestureActive = true;
-
-    }
-  );
+}
 
 
-$("phone")
-  .addEventListener(
-    "pointerup",
-    event => {
+/* =========================================
+   빠른 설정 스와이프
+   ========================================= */
 
-      if (
-        !gestureActive ||
-        gestureStartY === null
-      ) {
+$("phone").addEventListener("pointerdown", event => {
 
-        return;
-      }
+  if (state.isPoweredOff) return;
 
-      const difference =
-        event.clientY -
-        gestureStartY;
+  if (
+    event.target.closest("#powerButton") ||
+    event.target.closest("#quickPanel") ||
+    event.target.closest("#bottomNav") ||
+    event.target.closest(".overlay") ||
+    event.target.closest("#photoViewer")
+  ) {
+    return;
+  }
 
-      if (
-        !quickPanel.classList.contains(
-          "open"
-        ) &&
-        gestureStartY <= 55 &&
-        difference >= 55
-      ) {
+  gestureStartY = event.clientY;
+  gestureActive = true;
+  gestureSource = "screen";
+  gestureHandled = false;
 
-        openQuickPanel();
-
-      } else if (
-        quickPanel.classList.contains(
-          "open"
-        ) &&
-        difference <= -55
-      ) {
-
-        closeQuickPanel();
-
-      }
-
-      gestureStartY = null;
-      gestureActive = false;
-
-    }
-  );
+});
 
 
-$("phone")
-  .addEventListener(
-    "pointercancel",
-    () => {
+$("phone").addEventListener("pointermove", event => {
 
-      gestureStartY = null;
-      gestureActive = false;
+  if (
+    !gestureActive ||
+    gestureStartY === null ||
+    gestureHandled
+  ) {
+    return;
+  }
 
-    }
-  );
+  const difference =
+    event.clientY - gestureStartY;
 
 
-/*
-  빠른 설정 내부에서 위로 스와이프
-*/
+  if (
+    gestureSource === "screen" &&
+    !quickPanel.classList.contains("open") &&
+    gestureStartY <= 80 &&
+    difference >= 55
+  ) {
+
+    gestureHandled = true;
+
+    openQuickPanel();
+
+    resetGesture();
+
+    return;
+  }
+
+
+  if (
+    gestureSource === "screen" &&
+    quickPanel.classList.contains("open") &&
+    difference <= -55
+  ) {
+
+    gestureHandled = true;
+
+    closeQuickPanel();
+
+    resetGesture();
+
+  }
+
+});
+
+
+$("phone").addEventListener("pointerup", event => {
+
+  if (
+    !gestureActive ||
+    gestureStartY === null
+  ) {
+
+    resetGesture();
+
+    return;
+  }
+
+  const difference =
+    event.clientY - gestureStartY;
+
+
+  if (
+    !gestureHandled &&
+    gestureSource === "screen" &&
+    !quickPanel.classList.contains("open") &&
+    gestureStartY <= 80 &&
+    difference >= 55
+  ) {
+
+    openQuickPanel();
+
+  } else if (
+    !gestureHandled &&
+    gestureSource === "screen" &&
+    quickPanel.classList.contains("open") &&
+    difference <= -55
+  ) {
+
+    closeQuickPanel();
+
+  }
+
+  resetGesture();
+
+});
+
+
+$("phone").addEventListener(
+  "pointercancel",
+  resetGesture
+);
+
+
+/* 빠른 설정창 자체에서 위로 스와이프하여 닫기 */
 
 quickPanel.addEventListener(
   "pointerdown",
   event => {
 
-    gestureStartY =
-      event.clientY;
+    if (state.isPoweredOff) return;
 
+    gestureStartY = event.clientY;
     gestureActive = true;
+    gestureSource = "quickPanel";
+    gestureHandled = false;
+
+  }
+);
+
+
+quickPanel.addEventListener(
+  "pointermove",
+  event => {
+
+    if (
+      !gestureActive ||
+      gestureStartY === null ||
+      gestureHandled
+    ) {
+      return;
+    }
+
+    const difference =
+      event.clientY - gestureStartY;
+
+    if (
+      gestureSource === "quickPanel" &&
+      difference <= -55
+    ) {
+
+      gestureHandled = true;
+
+      closeQuickPanel();
+
+      resetGesture();
+
+    }
 
   }
 );
@@ -1682,19 +2016,37 @@ quickPanel.addEventListener(
   event => {
 
     if (
-      gestureStartY !== null &&
-      event.clientY -
-      gestureStartY <= -55
+      !gestureActive ||
+      gestureStartY === null
+    ) {
+
+      resetGesture();
+
+      return;
+    }
+
+    const difference =
+      event.clientY - gestureStartY;
+
+    if (
+      !gestureHandled &&
+      gestureSource === "quickPanel" &&
+      difference <= -55
     ) {
 
       closeQuickPanel();
 
     }
 
-    gestureStartY = null;
-    gestureActive = false;
+    resetGesture();
 
   }
+);
+
+
+quickPanel.addEventListener(
+  "pointercancel",
+  resetGesture
 );
 
 
@@ -1707,81 +2059,80 @@ const savedBrightness =
     STORAGE.brightness
   ) || "100";
 
+
 $("brightness").value =
   savedBrightness;
+
 
 $("screen").style.filter =
   `brightness(${savedBrightness}%)`;
 
 
-$("brightness")
-  .addEventListener(
-    "input",
-    event => {
+$("brightness").addEventListener(
+  "input",
+  event => {
 
-      const value =
-        event.target.value;
+    const value =
+      event.target.value;
 
-      localStorage.setItem(
-        STORAGE.brightness,
-        value
-      );
+    localStorage.setItem(
+      STORAGE.brightness,
+      value
+    );
 
-      $("screen").style.filter =
-        `brightness(${value}%)`;
+    $("screen").style.filter =
+      `brightness(${value}%)`;
 
-    }
-  );
+  }
+);
 
 
 /* =========================================
    Wi-Fi
    ========================================= */
 
-$("wifiButton")
-  .addEventListener(
-    "click",
-    () => {
+$("wifiButton").addEventListener(
+  "click",
+  () => {
 
-      vibrate();
+    vibrate();
 
-      state.wifi =
-        !state.wifi;
+    state.wifi =
+      !state.wifi;
 
-      $("wifiButton")
-        .classList
-        .toggle(
-          "active",
-          state.wifi
-        );
+    $("wifiButton")
+      .classList
+      .toggle(
+        "active",
+        state.wifi
+      );
 
-    }
-  );
+  }
+);
 
 
 /* =========================================
    비행기 모드
    ========================================= */
 
-$("airplaneButton")
-  .addEventListener(
-    "click",
-    () => {
+$("airplaneButton").addEventListener(
+  "click",
+  () => {
 
-      vibrate();
+    vibrate();
 
-      state.airplane =
-        !state.airplane;
+    state.airplane =
+      !state.airplane;
 
-      $("airplaneButton")
-        .classList
-        .toggle(
-          "active",
-          state.airplane
-        );
+    $("airplaneButton")
+      .classList
+      .toggle(
+        "active",
+        state.airplane
+      );
 
-    }
-  );
+  }
+);
 
 
 /* =========================================
@@ -1796,6 +2147,7 @@ function updateSoundUI() {
   const icon =
     button.querySelector("span");
 
+
   if (state.sound === "sound") {
 
     button.classList.remove(
@@ -1806,6 +2158,7 @@ function updateSoundUI() {
 
     $("soundText").textContent =
       "소리";
+
 
   } else if (
     state.sound === "silent"
@@ -1819,6 +2172,7 @@ function updateSoundUI() {
 
     $("soundText").textContent =
       "무음";
+
 
   } else {
 
@@ -1836,157 +2190,171 @@ function updateSoundUI() {
 }
 
 
-$("soundButton")
-  .addEventListener(
-    "click",
-    () => {
+$("soundButton").addEventListener(
+  "click",
+  () => {
 
-      if (state.sound === "sound") {
+    if (state.sound === "sound") {
 
-        state.sound = "silent";
+      state.sound = "silent";
 
-      } else if (
-        state.sound === "silent"
-      ) {
+    } else if (
+      state.sound === "silent"
+    ) {
 
-        state.sound = "vibrate";
+      state.sound = "vibrate";
 
-      } else {
+    } else {
 
-        state.sound = "sound";
-
-      }
-
-      localStorage.setItem(
-        STORAGE.sound,
-        state.sound
-      );
-
-      updateSoundUI();
-
-      if (
-        state.sound !== "silent" &&
-        "vibrate" in navigator
-      ) {
-
-        navigator.vibrate(15);
-
-      }
+      state.sound = "sound";
 
     }
-  );
+
+    localStorage.setItem(
+      STORAGE.sound,
+      state.sound
+    );
+
+    updateSoundUI();
 
 
-updateSoundUI();/* =========================================
+    if (
+      state.sound !== "silent" &&
+      "vibrate" in navigator
+    ) {
+
+      navigator.vibrate(15);
+
+    }
+
+  }
+);
+
+
+updateSoundUI();
+
+
+/* =========================================
    손전등
    ========================================= */
 
-$("flashButton")
-  .addEventListener(
-    "click",
-    async () => {
+$("flashButton").addEventListener(
+  "click",
+  async () => {
 
-      vibrate();
+    vibrate();
 
-      if (
-        !navigator.mediaDevices ||
-        !navigator.mediaDevices.getUserMedia
-      ) {
+    if (
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ) {
 
-        alert(
-          "이 브라우저에서는 손전등 기능을 사용할 수 없습니다."
-        );
+      alert(
+        "이 브라우저에서는 손전등 기능을 사용할 수 없습니다."
+      );
 
-        return;
-      }
+      return;
+    }
 
-      try {
 
-        if (!state.flashlight) {
+    try {
 
-          if (!state.stream) {
+      if (!state.flashlight) {
 
-            state.stream =
-              await navigator.mediaDevices
-                .getUserMedia({
-                  video: {
-                    facingMode: {
-                      ideal: "environment"
-                    }
-                  },
-                  audio: false
-                });
+        if (!state.stream) {
 
-          }
+          state.stream =
+            await navigator.mediaDevices
+              .getUserMedia({
+                video: {
+                  facingMode: {
+                    ideal: "environment"
+                  }
+                },
+                audio: false
+              });
 
-          const track =
-            state.stream
-              .getVideoTracks()[0];
+        }
 
-          const capabilities =
-            track.getCapabilities
-              ? track.getCapabilities()
-              : {};
 
-          if (!capabilities.torch) {
+        const track =
+          state.stream
+            .getVideoTracks()[0];
 
-            alert(
-              "현재 기기 또는 브라우저가 실제 손전등 제어를 지원하지 않습니다."
-            );
 
-            return;
-          }
+        const capabilities =
+          track.getCapabilities
+            ? track.getCapabilities()
+            : {};
+
+
+        if (!capabilities.torch) {
+
+          alert(
+            "현재 기기 또는 브라우저가 실제 손전등 제어를 지원하지 않습니다."
+          );
+
+          return;
+        }
+
+
+        await track.applyConstraints({
+          advanced: [
+            {
+              torch: true
+            }
+          ]
+        });
+
+
+        state.flashlight = true;
+
+
+        $("flashButton")
+          .classList
+          .add("active");
+
+
+      } else {
+
+        const track =
+          state.stream
+            ?.getVideoTracks()[0];
+
+
+        if (track) {
 
           await track.applyConstraints({
             advanced: [
               {
-                torch: true
+                torch: false
               }
             ]
           });
 
-          state.flashlight = true;
-
-          $("flashButton")
-            .classList
-            .add("active");
-
-        } else {
-
-          const track =
-            state.stream
-              ?.getVideoTracks()[0];
-
-          if (track) {
-
-            await track.applyConstraints({
-              advanced: [
-                {
-                  torch: false
-                }
-              ]
-            });
-
-          }
-
-          state.flashlight = false;
-
-          $("flashButton")
-            .classList
-            .remove("active");
-
         }
 
-      } catch (error) {
 
-        alert(
-          "손전등을 제어하지 못했습니다."
-        );
+        state.flashlight = false;
+
+
+        $("flashButton")
+          .classList
+          .remove("active");
 
       }
 
+
+    } catch (error) {
+
+      alert(
+        "손전등을 제어하지 못했습니다."
+      );
+
     }
-  );
+
+  }
+);
 
 
 /* =========================================
@@ -2001,24 +2369,23 @@ $("flashButton")
   절대로 표시하지 않는다.
 */
 
-$("powerButton")
-  .addEventListener(
-    "click",
-    () => {
+$("powerButton").addEventListener(
+  "click",
+  () => {
 
-      if (state.isPoweredOff) {
+    if (state.isPoweredOff) {
 
-        powerOn();
+      powerOn();
 
-        return;
-      }
-
-      vibrate();
-
-      powerOff();
-
+      return;
     }
-  );
+
+    vibrate();
+
+    powerOff();
+
+  }
+);
 
 
 function powerOff() {
@@ -2029,11 +2396,14 @@ function powerOff() {
 
   closeQuickPanel();
 
+
   $("bottomNav").style.display =
     "none";
 
+
   $("statusBar").style.display =
     "none";
+
 
   $("powerOffOverlay")
     .classList
@@ -2046,15 +2416,19 @@ function powerOn() {
 
   state.isPoweredOff = false;
 
+
   $("powerOffOverlay")
     .classList
     .add("hidden");
 
+
   $("bottomNav").style.display =
     "grid";
 
+
   $("statusBar").style.display =
     "flex";
+
 
   showLockScreen();
 
@@ -2069,254 +2443,4 @@ updateLockStatus();
 
 showPage("homePage");
 
-showLockScreen();/* =========================================
-   빠른 설정 / 하단 네비게이션 안정화
-   ========================================= */
-
-(() => {
-
-  const phone =
-    document.getElementById("phone");
-
-  const screen =
-    document.getElementById("screen");
-
-  const quickPanel =
-    document.getElementById("quickPanel");
-
-  const bottomNav =
-    document.getElementById("bottomNav");
-
-
-  if (!phone) {
-    return;
-  }
-
-
-  /*
-    하단 네비게이션이 화면에
-    제대로 표시되고 눌리도록 설정
-  */
-
-  if (bottomNav) {
-
-    bottomNav.style.zIndex = "900";
-
-    bottomNav.style.pointerEvents =
-      "auto";
-
-  }
-
-
-  /*
-    빠른 설정창은 열렸을 때만
-    터치 가능하도록 설정
-  */
-
-  if (quickPanel) {
-
-    quickPanel.style.zIndex = "850";
-
-    quickPanel.style.pointerEvents =
-      "none";
-
-  }
-
-
-  if (screen) {
-
-    screen.style.zIndex = "1";
-
-  }
-
-
-  let startY = null;
-
-
-  /*
-    위에서 아래로 스와이프
-  */
-
-  phone.addEventListener(
-    "pointerdown",
-    event => {
-
-      if (
-        typeof state !== "undefined" &&
-        state.isPoweredOff
-      ) {
-        return;
-      }
-
-
-      if (
-        event.target.closest(
-          "#powerButton"
-        ) ||
-        event.target.closest(
-          "#quickPanel"
-        ) ||
-        event.target.closest(
-          "#bottomNav"
-        ) ||
-        event.target.closest(
-          ".overlay"
-        ) ||
-        event.target.closest(
-          "#photoViewer"
-        )
-      ) {
-
-        return;
-      }
-
-
-      startY =
-        event.clientY;
-
-    },
-    true
-  );
-
-
-  phone.addEventListener(
-    "pointerup",
-    event => {
-
-      if (
-        typeof state !== "undefined" &&
-        state.isPoweredOff
-      ) {
-
-        startY = null;
-
-        return;
-      }
-
-
-      if (startY === null) {
-        return;
-      }
-
-
-      const difference =
-        event.clientY - startY;
-
-
-      const panelOpen =
-        quickPanel &&
-        quickPanel.classList.contains(
-          "open"
-        );
-
-
-      if (
-        !panelOpen &&
-        startY <= 70 &&
-        difference >= 50
-      ) {
-
-        if (
-          typeof openQuickPanel ===
-          "function"
-        ) {
-
-          openQuickPanel();
-
-        }
-
-      } else if (
-        panelOpen &&
-        difference <= -50
-      ) {
-
-        if (
-          typeof closeQuickPanel ===
-          "function"
-        ) {
-
-          closeQuickPanel();
-
-        }
-
-      }
-
-
-      startY = null;
-
-    },
-    true
-  );
-
-
-  phone.addEventListener(
-    "pointercancel",
-    () => {
-
-      startY = null;
-
-    },
-    true
-  );
-
-
-  /*
-    빠른 설정창이 열렸을 때만
-    내부 버튼을 누를 수 있도록 함
-  */
-
-  if (quickPanel) {
-
-    const observer =
-      new MutationObserver(() => {
-
-        quickPanel.style.pointerEvents =
-          quickPanel.classList.contains(
-            "open"
-          )
-            ? "auto"
-            : "none";
-
-      });
-
-
-    observer.observe(
-      quickPanel,
-      {
-        attributes: true,
-        attributeFilter: ["class"]
-      }
-    );
-
-  }
-
-
-  /*
-    하단 네비게이션 버튼 터치 보장
-  */
-
-  [
-    "homeNav",
-    "recentNav",
-    "backNav"
-  ].forEach(id => {
-
-    const button =
-      document.getElementById(id);
-
-    if (!button) {
-      return;
-    }
-
-    button.style.pointerEvents =
-      "auto";
-
-    button.style.position =
-      "relative";
-
-    button.style.zIndex =
-      "1";
-
-  });
-
-})();
+showLockScreen();
