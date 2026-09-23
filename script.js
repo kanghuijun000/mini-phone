@@ -19,11 +19,15 @@ const state = {
   currentPage: "homePage",
   currentMemo: null,
   currentPhoto: null,
+
   stream: null,
+
   sound: localStorage.getItem(STORAGE.sound) || "sound",
+
   wifi: true,
   airplane: false,
   flashlight: false,
+
   isPoweredOff: false
 };
 
@@ -33,11 +37,15 @@ const state = {
    ========================================= */
 
 function vibrate() {
-  if (state.sound === "silent") return;
+
+  if (state.sound === "silent") {
+    return;
+  }
 
   if ("vibrate" in navigator) {
     navigator.vibrate(15);
   }
+
 }
 
 function getLockType() {
@@ -54,15 +62,19 @@ function getLockValue() {
    ========================================= */
 
 function showPage(pageId) {
+
   document.querySelectorAll(".page").forEach(page => {
     page.classList.add("hidden");
   });
 
   const page = $(pageId);
 
-  if (!page) return;
+  if (!page) {
+    return;
+  }
 
   page.classList.remove("hidden");
+
   state.currentPage = pageId;
 
   if (
@@ -72,6 +84,7 @@ function showPage(pageId) {
   ) {
     saveRecent(pageId);
   }
+
 }
 
 
@@ -80,6 +93,7 @@ function showPage(pageId) {
    ========================================= */
 
 function updateClock() {
+
   const now = new Date();
 
   const h = String(now.getHours()).padStart(2, "0");
@@ -96,13 +110,17 @@ function updateClock() {
     weekday: "long"
   });
 
-  if ($("statusTime")) $("statusTime").textContent = time;
-  if ($("homeClock")) $("homeClock").textContent = time;
-  if ($("homeDate")) $("homeDate").textContent = date;
-  if ($("lockTime")) $("lockTime").textContent = time;
-  if ($("lockDate")) $("lockDate").textContent = date;
-  if ($("bigClock")) $("bigClock").textContent = fullTime;
-  if ($("bigDate")) $("bigDate").textContent = date;
+  $("statusTime").textContent = time;
+
+  $("homeClock").textContent = time;
+  $("homeDate").textContent = date;
+
+  $("lockTime").textContent = time;
+  $("lockDate").textContent = date;
+
+  $("bigClock").textContent = fullTime;
+  $("bigDate").textContent = date;
+
 }
 
 setInterval(updateClock, 1000);
@@ -114,7 +132,9 @@ updateClock();
    ========================================= */
 
 document.querySelectorAll(".appIcon").forEach(button => {
+
   button.addEventListener("click", () => {
+
     vibrate();
 
     const app = button.dataset.app;
@@ -145,7 +165,9 @@ document.querySelectorAll(".appIcon").forEach(button => {
       showPage("settingsPage");
       updateLockStatus();
     }
+
   });
+
 });
 
 
@@ -154,10 +176,15 @@ document.querySelectorAll(".appIcon").forEach(button => {
    ========================================= */
 
 document.querySelectorAll(".backApp").forEach(button => {
+
   button.addEventListener("click", () => {
+
     vibrate();
+
     showPage("homePage");
+
   });
+
 });
 
 
@@ -207,6 +234,7 @@ $("backNav").addEventListener("click", event => {
    ========================================= */
 
 function saveRecent(pageId) {
+
   if (
     pageId === "homePage" ||
     pageId === "recentPage"
@@ -219,14 +247,18 @@ function saveRecent(pageId) {
   );
 
   recent = recent.filter(item => item !== pageId);
+
   recent.unshift(pageId);
+
   recent = recent.slice(0, 8);
 
   localStorage.setItem(
     STORAGE.recent,
     JSON.stringify(recent)
   );
+
 }
+
 
 const pageNames = {
   phonePage: "전화",
@@ -237,7 +269,9 @@ const pageNames = {
   settingsPage: "설정"
 };
 
+
 function renderRecent() {
+
   const box = $("recentList");
 
   box.innerHTML = "";
@@ -247,15 +281,18 @@ function renderRecent() {
   );
 
   if (recent.length === 0) {
+
     box.innerHTML = `
       <div class="recentCard">
         최근 사용한 앱이 없습니다.
       </div>
     `;
+
     return;
   }
 
   recent.forEach(pageId => {
+
     const card = document.createElement("div");
 
     card.className = "recentCard";
@@ -269,7 +306,9 @@ function renderRecent() {
     card.querySelector("button").addEventListener(
       "click",
       () => {
+
         vibrate();
+
         showPage(pageId);
 
         if (pageId === "galleryPage") {
@@ -279,18 +318,25 @@ function renderRecent() {
         if (pageId === "memoPage") {
           renderMemos();
         }
+
       }
     );
 
     box.appendChild(card);
+
   });
+
 }
 
+
 $("clearRecent").addEventListener("click", () => {
+
   vibrate();
 
   localStorage.removeItem(STORAGE.recent);
+
   renderRecent();
+
 });
 
 
@@ -299,13 +345,17 @@ $("clearRecent").addEventListener("click", () => {
    ========================================= */
 
 $("callButton").addEventListener("click", () => {
+
   vibrate();
 
-  const number = $("phoneNumber").value.trim();
+  const number =
+    $("phoneNumber").value.trim();
 
   if (!number) {
+
     $("callResult").textContent =
       "전화번호를 입력하세요.";
+
     return;
   }
 
@@ -313,8 +363,10 @@ $("callButton").addEventListener("click", () => {
     number.replace(/[^0-9+#*]/g, "");
 
   if (!phoneNumber) {
+
     $("callResult").textContent =
       "올바른 전화번호를 입력하세요.";
+
     return;
   }
 
@@ -323,6 +375,7 @@ $("callButton").addEventListener("click", () => {
 
   window.location.href =
     `tel:${phoneNumber}`;
+
 });
 
 
@@ -333,9 +386,11 @@ $("callButton").addEventListener("click", () => {
 $("startCamera").addEventListener(
   "click",
   async () => {
+
     vibrate();
 
     try {
+
       stopCamera();
 
       state.stream =
@@ -352,40 +407,48 @@ $("startCamera").addEventListener(
         state.stream;
 
     } catch (error) {
+
       alert(
         "카메라를 사용할 수 없습니다.\n카메라 권한을 확인하세요."
       );
+
     }
+
   }
 );
 
+
 $("stopCamera").addEventListener("click", () => {
+
   vibrate();
+
   stopCamera();
+
 });
 
+
 function stopCamera() {
+
   if (state.stream) {
+
     state.stream
       .getTracks()
       .forEach(track => track.stop());
 
     state.stream = null;
+
   }
 
-  if ($("cameraVideo")) {
-    $("cameraVideo").srcObject = null;
-  }
+  $("cameraVideo").srcObject = null;
 
   if (state.flashlight) {
+
     state.flashlight = false;
 
-    if ($("flashButton")) {
-      $("flashButton")
-        .classList
-        .remove("active");
-    }
+    $("flashButton").classList.remove("active");
+
   }
+
 }
 
 
@@ -394,6 +457,7 @@ function stopCamera() {
    ========================================= */
 
 $("takePhoto").addEventListener("click", () => {
+
   vibrate();
 
   const video = $("cameraVideo");
@@ -403,7 +467,9 @@ $("takePhoto").addEventListener("click", () => {
     !state.stream ||
     video.readyState < 2
   ) {
+
     alert("먼저 카메라를 켜주세요.");
+
     return;
   }
 
@@ -438,6 +504,7 @@ $("takePhoto").addEventListener("click", () => {
   );
 
   alert("사진이 저장되었습니다.");
+
 });
 
 
@@ -446,6 +513,7 @@ $("takePhoto").addEventListener("click", () => {
    ========================================= */
 
 function renderGallery() {
+
   const grid = $("galleryGrid");
 
   grid.innerHTML = "";
@@ -455,6 +523,7 @@ function renderGallery() {
   );
 
   if (photos.length === 0) {
+
     grid.innerHTML = `
       <div style="
         grid-column:1/-1;
@@ -470,6 +539,7 @@ function renderGallery() {
   }
 
   photos.forEach(photo => {
+
     const item =
       document.createElement("div");
 
@@ -485,6 +555,7 @@ function renderGallery() {
 
     item.querySelector("img")
       .addEventListener("click", () => {
+
         vibrate();
 
         state.currentPhoto =
@@ -496,21 +567,29 @@ function renderGallery() {
         $("photoViewer")
           .classList
           .remove("hidden");
+
       });
 
     item.querySelector(".galleryDelete")
       .addEventListener("click", event => {
+
         event.stopPropagation();
 
         vibrate();
+
         deletePhoto(photo.id);
+
       });
 
     grid.appendChild(item);
+
   });
+
 }
 
+
 function deletePhoto(id) {
+
   let photos = JSON.parse(
     localStorage.getItem(STORAGE.photos) || "[]"
   );
@@ -524,10 +603,13 @@ function deletePhoto(id) {
   );
 
   renderGallery();
+
 }
+
 
 $("deleteAllPhotos")
   .addEventListener("click", () => {
+
     vibrate();
 
     if (!confirm("모든 사진을 삭제할까요?")) {
@@ -539,19 +621,25 @@ $("deleteAllPhotos")
     );
 
     renderGallery();
+
   });
+
 
 $("closePhotoViewer")
   .addEventListener("click", () => {
+
     vibrate();
 
     $("photoViewer")
       .classList
       .add("hidden");
+
   });
+
 
 $("deleteCurrentPhoto")
   .addEventListener("click", () => {
+
     vibrate();
 
     deletePhoto(
@@ -561,6 +649,7 @@ $("deleteCurrentPhoto")
     $("photoViewer")
       .classList
       .add("hidden");
+
   });
 
 
@@ -569,15 +658,19 @@ $("deleteCurrentPhoto")
    ========================================= */
 
 function escapeHTML(value) {
+
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+
 }
 
+
 function renderMemos() {
+
   const list = $("memoList");
 
   list.innerHTML = "";
@@ -587,6 +680,7 @@ function renderMemos() {
   );
 
   if (memos.length === 0) {
+
     list.innerHTML = `
       <div class="memoCard">
         저장된 메모가 없습니다.
@@ -597,6 +691,7 @@ function renderMemos() {
   }
 
   memos.forEach(memo => {
+
     const card =
       document.createElement("div");
 
@@ -617,6 +712,7 @@ function renderMemos() {
     `;
 
     card.addEventListener("click", () => {
+
       vibrate();
 
       state.currentMemo = memo.id;
@@ -628,14 +724,19 @@ function renderMemos() {
         memo.content || "";
 
       showPage("memoEditPage");
+
     });
 
     list.appendChild(card);
+
   });
+
 }
+
 
 $("newMemoButton")
   .addEventListener("click", () => {
+
     vibrate();
 
     state.currentMemo = null;
@@ -644,18 +745,25 @@ $("newMemoButton")
     $("memoContent").value = "";
 
     showPage("memoEditPage");
+
   });
+
 
 $("memoEditBack")
   .addEventListener("click", () => {
+
     vibrate();
 
     showPage("memoPage");
+
     renderMemos();
+
   });
+
 
 $("saveMemo")
   .addEventListener("click", () => {
+
     vibrate();
 
     const title =
@@ -669,12 +777,15 @@ $("saveMemo")
     );
 
     if (state.currentMemo === null) {
+
       memos.unshift({
         id: Date.now(),
         title: title,
         content: content
       });
+
     } else {
+
       const index =
         memos.findIndex(
           memo =>
@@ -682,9 +793,15 @@ $("saveMemo")
         );
 
       if (index !== -1) {
-        memos[index].title = title;
-        memos[index].content = content;
+
+        memos[index].title =
+          title;
+
+        memos[index].content =
+          content;
+
       }
+
     }
 
     localStorage.setItem(
@@ -693,15 +810,21 @@ $("saveMemo")
     );
 
     showPage("memoPage");
+
     renderMemos();
+
   });
+
 
 $("deleteMemo")
   .addEventListener("click", () => {
+
     vibrate();
 
     if (state.currentMemo === null) {
+
       showPage("memoPage");
+
       return;
     }
 
@@ -723,43 +846,61 @@ $("deleteMemo")
     state.currentMemo = null;
 
     showPage("memoPage");
+
     renderMemos();
+
   });
 /* =========================================
    잠금 상태
    ========================================= */
 
 function updateLockStatus() {
+
   const type = getLockType();
 
   if (!type) {
+
     $("lockStatus").textContent =
       "잠금 없음";
+
   } else if (type === "pin") {
+
     $("lockStatus").textContent =
       "PIN 잠금 사용 중";
+
   } else {
+
     $("lockStatus").textContent =
       "패턴 잠금 사용 중";
+
   }
+
 }
 
 
 /* =========================================
-   PIN 설정
+   PIN
    ========================================= */
 
 $("setPin").addEventListener("click", () => {
+
   vibrate();
 
   if (getLockType()) {
+
     beginVerifyLock("pin");
+
   } else {
+
     openPinSetup();
+
   }
+
 });
 
+
 function openPinSetup() {
+
   $("pinSetupTitle").textContent =
     "PIN 설정";
 
@@ -772,10 +913,13 @@ function openPinSetup() {
   $("pinSetupOverlay")
     .classList
     .remove("hidden");
+
 }
+
 
 $("confirmPinSetup")
   .addEventListener("click", () => {
+
     vibrate();
 
     const pin =
@@ -785,14 +929,18 @@ $("confirmPinSetup")
       $("setupPinConfirm").value;
 
     if (!/^\d{4,6}$/.test(pin)) {
+
       alert(
         "PIN은 숫자 4~6자리여야 합니다."
       );
+
       return;
     }
 
     if (pin !== confirmPin) {
+
       alert("PIN이 서로 다릅니다.");
+
       return;
     }
 
@@ -815,6 +963,7 @@ $("confirmPinSetup")
     alert(
       "PIN 잠금이 설정되었습니다."
     );
+
   });
 
 
@@ -825,22 +974,31 @@ $("confirmPinSetup")
 $("setPattern").addEventListener(
   "click",
   () => {
+
     vibrate();
 
     if (getLockType()) {
+
       beginVerifyLock("pattern");
+
     } else {
+
       openPatternSetup();
+
     }
+
   }
 );
 
+
 function openPatternSetup() {
+
   patternSetup.reset();
 
   $("patternSetupOverlay")
     .classList
     .remove("hidden");
+
 }
 
 
@@ -854,49 +1012,64 @@ $("unlockPinButton")
     verifyPinUnlock
   );
 
+
 $("unlockPin")
   .addEventListener(
     "keydown",
     event => {
+
       if (event.key === "Enter") {
         verifyPinUnlock();
       }
+
     }
   );
 
+
 function verifyPinUnlock() {
+
   const input =
     $("unlockPin").value;
 
   if (
     input === getLockValue()
   ) {
+
     unlockPhone();
+
   } else {
+
     $("unlockPin").value = "";
 
     alert(
       "PIN이 올바르지 않습니다."
     );
+
   }
+
 }
 
+
 function unlockPhone() {
+
   $("lockScreen")
     .classList
     .add("hidden");
 
   $("unlockPin").value = "";
+
 }
 
 
 /* =========================================
-   잠금 변경 확인
+   잠금 확인
    ========================================= */
 
 let verifyAction = null;
 
+
 function beginVerifyLock(action) {
+
   verifyAction = action;
 
   $("verifyPin").value = "";
@@ -904,6 +1077,7 @@ function beginVerifyLock(action) {
   const type = getLockType();
 
   if (type === "pin") {
+
     $("verifyPin")
       .classList
       .remove("hidden");
@@ -913,6 +1087,7 @@ function beginVerifyLock(action) {
       .add("hidden");
 
   } else {
+
     $("verifyPin")
       .classList
       .add("hidden");
@@ -922,47 +1097,54 @@ function beginVerifyLock(action) {
       .remove("hidden");
 
     verifyPattern.reset();
+
   }
 
   $("verifyLockOverlay")
     .classList
     .remove("hidden");
+
 }
 
-$("closeVerifyLock")
-  .addEventListener("click", () => {
-    vibrate();
 
-    verifyAction = null;
+$("closeVerifyLock").addEventListener("click", () => {
 
-    $("verifyPin").value = "";
+  vibrate();
+  verifyAction = null;
+  $("verifyPin").value = "";
+  verifyPattern.reset();
+  $("verifyLockOverlay").classList.add("hidden");
 
-    verifyPattern.reset();
+});
 
-    $("verifyLockOverlay")
-      .classList
-      .add("hidden");
-  });
 
 $("verifyLockButton")
   .addEventListener("click", () => {
+
     vibrate();
 
     let correct = false;
 
     if (getLockType() === "pin") {
+
       correct =
         $("verifyPin").value ===
         getLockValue();
+
     } else {
+
       correct =
         verifyPattern.getPattern() ===
         getLockValue();
+
     }
 
     if (correct) {
+
       finishVerifyAction();
+
     } else {
+
       $("verifyPin").value = "";
 
       verifyPattern.reset();
@@ -970,25 +1152,32 @@ $("verifyLockButton")
       alert(
         "현재 잠금이 올바르지 않습니다."
       );
+
     }
+
   });
 
+
 function finishVerifyAction() {
+
   $("verifyLockOverlay")
     .classList
     .add("hidden");
 
   if (verifyAction === "pin") {
+
     openPinSetup();
 
   } else if (
     verifyAction === "pattern"
   ) {
+
     openPatternSetup();
 
   } else if (
     verifyAction === "remove"
   ) {
+
     localStorage.removeItem(
       STORAGE.lockType
     );
@@ -1002,9 +1191,9 @@ function finishVerifyAction() {
     alert(
       "잠금이 해제되었습니다."
     );
+
   }
 
-  verifyAction = null;
 }
 
 
@@ -1014,9 +1203,11 @@ function finishVerifyAction() {
 
 $("removeLock")
   .addEventListener("click", () => {
+
     vibrate();
 
     if (!getLockType()) {
+
       alert(
         "현재 설정된 잠금이 없습니다."
       );
@@ -1025,6 +1216,7 @@ $("removeLock")
     }
 
     beginVerifyLock("remove");
+
   });
 
 
@@ -1033,6 +1225,7 @@ $("removeLock")
    ========================================= */
 
 function createPatternBoard(boardElement) {
+
   const canvas =
     boardElement.querySelector("canvas");
 
@@ -1040,6 +1233,7 @@ function createPatternBoard(boardElement) {
     canvas.getContext("2d");
 
   let pattern = [];
+
   let drawing = false;
 
   let pointer = {
@@ -1049,6 +1243,7 @@ function createPatternBoard(boardElement) {
 
 
   function resizeCanvas() {
+
     const rect =
       boardElement.getBoundingClientRect();
 
@@ -1077,10 +1272,12 @@ function createPatternBoard(boardElement) {
     );
 
     draw();
+
   }
 
 
   function position(event) {
+
     const rect =
       boardElement.getBoundingClientRect();
 
@@ -1093,25 +1290,32 @@ function createPatternBoard(boardElement) {
         event.clientY -
         rect.top
     };
+
   }
 
 
   function getDot(index) {
+
     return boardElement.querySelector(
       `i[data-index="${index}"]`
     );
+
   }
 
 
   function findDot(x, y) {
+
     const rect =
       boardElement.getBoundingClientRect();
 
-    const dots = [
-      ...boardElement.querySelectorAll("i")
-    ];
+    const dots =
+      [
+        ...boardElement
+          .querySelectorAll("i")
+      ];
 
     for (const dot of dots) {
+
       const dotRect =
         dot.getBoundingClientRect();
 
@@ -1137,19 +1341,26 @@ function createPatternBoard(boardElement) {
           dy * dy
         );
 
-      if (distance < 32) {
+      if (distance < 28) {
+
         return Number(
           dot.dataset.index
         );
+
       }
+
     }
 
     return null;
+
   }
 
 
   function addDot(index) {
-    if (index === null) return;
+
+    if (index === null) {
+      return;
+    }
 
     if (pattern.includes(index)) {
       return;
@@ -1165,10 +1376,12 @@ function createPatternBoard(boardElement) {
     }
 
     draw();
+
   }
 
 
   function draw() {
+
     ctx.clearRect(
       0,
       0,
@@ -1187,10 +1400,13 @@ function createPatternBoard(boardElement) {
 
     pattern.forEach(
       (index, positionIndex) => {
+
         const dot =
           getDot(index);
 
-        if (!dot) return;
+        if (!dot) {
+          return;
+        }
 
         const dotRect =
           dot.getBoundingClientRect();
@@ -1206,18 +1422,25 @@ function createPatternBoard(boardElement) {
           dotRect.height / 2;
 
         if (positionIndex === 0) {
+
           ctx.moveTo(x, y);
+
         } else {
+
           ctx.lineTo(x, y);
+
         }
+
       }
     );
 
     if (drawing) {
+
       ctx.lineTo(
         pointer.x,
         pointer.y
       );
+
     }
 
     ctx.lineWidth = 6;
@@ -1226,22 +1449,26 @@ function createPatternBoard(boardElement) {
     ctx.strokeStyle = "#ffffff";
 
     ctx.stroke();
+
   }
 
 
   function start(event) {
+
     event.preventDefault();
 
     drawing = true;
+
     pattern = [];
 
     boardElement
       .querySelectorAll("i")
-      .forEach(dot => {
-        dot.classList.remove(
-          "active"
-        );
-      });
+      .forEach(
+        dot =>
+          dot.classList.remove(
+            "active"
+          )
+      );
 
     pointer =
       position(event);
@@ -1254,17 +1481,23 @@ function createPatternBoard(boardElement) {
     );
 
     try {
+
       boardElement.setPointerCapture(
         event.pointerId
       );
+
     } catch {}
 
     draw();
+
   }
 
 
   function move(event) {
-    if (!drawing) return;
+
+    if (!drawing) {
+      return;
+    }
 
     event.preventDefault();
 
@@ -1279,15 +1512,20 @@ function createPatternBoard(boardElement) {
     );
 
     draw();
+
   }
 
 
   function end() {
-    if (!drawing) return;
+
+    if (!drawing) {
+      return;
+    }
 
     drawing = false;
 
     draw();
+
   }
 
 
@@ -1324,41 +1562,51 @@ function createPatternBoard(boardElement) {
 
 
   return {
+
     reset() {
+
       pattern = [];
+
       drawing = false;
 
       boardElement
         .querySelectorAll("i")
-        .forEach(dot => {
-          dot.classList.remove(
-            "active"
-          );
-        });
+        .forEach(
+          dot =>
+            dot.classList.remove(
+              "active"
+            )
+        );
 
       draw();
+
     },
 
+
     getPattern() {
+
       if (pattern.length < 4) {
         return null;
       }
 
       return pattern.join("");
+
     }
+
   };
+
 }
-
-
 const patternSetup =
   createPatternBoard(
     $("setupBoard")
   );
 
+
 const verifyPattern =
   createPatternBoard(
     $("verifyBoard")
   );
+
 
 const unlockPattern =
   createPatternBoard(
@@ -1374,12 +1622,14 @@ $("confirmPattern")
   .addEventListener(
     "click",
     () => {
+
       vibrate();
 
       const pattern =
         patternSetup.getPattern();
 
       if (!pattern) {
+
         alert(
           "4개 이상의 점을 연결하세요."
         );
@@ -1406,6 +1656,7 @@ $("confirmPattern")
       alert(
         "패턴 잠금이 설정되었습니다."
       );
+
     }
   );
 
@@ -1415,10 +1666,12 @@ $("confirmPattern")
    ========================================= */
 
 function showLockScreen() {
+
   const type =
     getLockType();
 
   if (!type) {
+
     $("lockScreen")
       .classList
       .add("hidden");
@@ -1431,6 +1684,7 @@ function showLockScreen() {
     .remove("hidden");
 
   if (type === "pin") {
+
     $("pinUnlock")
       .classList
       .remove("hidden");
@@ -1439,9 +1693,8 @@ function showLockScreen() {
       .classList
       .add("hidden");
 
-    $("unlockPin").value = "";
-
   } else {
+
     $("pinUnlock")
       .classList
       .add("hidden");
@@ -1451,7 +1704,9 @@ function showLockScreen() {
       .remove("hidden");
 
     unlockPattern.reset();
+
   }
+
 }
 
 
@@ -1463,28 +1718,38 @@ $("unlockBoard")
   .addEventListener(
     "pointerup",
     () => {
+
       setTimeout(
         () => {
+
           const pattern =
             unlockPattern.getPattern();
 
-          if (!pattern) return;
+          if (!pattern) {
+            return;
+          }
 
           if (
             pattern ===
             getLockValue()
           ) {
+
             unlockPhone();
+
           } else {
+
             alert(
               "패턴이 올바르지 않습니다."
             );
 
             unlockPattern.reset();
+
           }
+
         },
         50
       );
+
     }
   );
 
@@ -1496,49 +1761,62 @@ $("unlockBoard")
 document
   .querySelectorAll("[data-bg]")
   .forEach(button => {
+
     button.addEventListener(
       "click",
       () => {
+
         vibrate();
 
         setBackground(
           button.dataset.bg
         );
+
       }
     );
+
   });
 
 
 function setBackground(type) {
+
   localStorage.setItem(
     STORAGE.background,
     type
   );
 
   applyBackground(type);
+
 }
 
 
 function applyBackground(type) {
+
   const screen =
     $("screen");
 
   if (type === "blue") {
+
     screen.style.background =
       "linear-gradient(160deg,#061b3a,#1261a0)";
 
   } else if (type === "purple") {
+
     screen.style.background =
       "linear-gradient(160deg,#210638,#7020a0)";
 
   } else if (type === "green") {
+
     screen.style.background =
       "linear-gradient(160deg,#062e20,#14805b)";
 
   } else {
+
     screen.style.background =
       "linear-gradient(160deg,#111,#222)";
+
   }
+
 }
 
 
@@ -1553,273 +1831,186 @@ applyBackground(
    빠른 설정
    ========================================= */
 
-const quickPanel =
-  $("quickPanel");
+const quickPanel = $("quickPanel");
+
+const QUICK_START_ZONE = 300;
+const QUICK_SWIPE_DISTANCE = 30;
 
 let gestureStartY = null;
 let gestureActive = false;
 let gestureSource = null;
 let gestureHandled = false;
 
-
-/*
-  기존보다 훨씬 넓게 잡음.
-  화면 위쪽 180px 안에서 시작하면
-  빠른 설정 스와이프로 인식.
-*/
-const QUICK_START_ZONE = 180;
-
-/*
-  기존 45px보다 낮춰서
-  모바일에서도 쉽게 인식.
-*/
-const QUICK_SWIPE_DISTANCE = 30;
-
-
 function resetGesture() {
+
   gestureStartY = null;
   gestureActive = false;
   gestureSource = null;
   gestureHandled = false;
+
 }
 
-
 function openQuickPanel() {
+
   if (state.isPoweredOff) return;
 
   quickPanel.classList.add("open");
-}
 
+}
 
 function closeQuickPanel() {
-  quickPanel.classList.remove("open");
-}
 
+  quickPanel.classList.remove("open");
+
+}
 
 function getPhoneLocalY(clientY) {
-  const rect =
-    $("phone").getBoundingClientRect();
 
+  const rect = $("phone").getBoundingClientRect();
   return clientY - rect.top;
+
 }
 
+/* 화면 최상단에서 아래로 스와이프 / 빠른 설정창에서 위로 스와이프 */
+$("phone").addEventListener("pointerdown", event => {
 
-/*
-  휴대폰 화면에서 시작하는
-  빠른 설정 제스처
-*/
-$("phone").addEventListener(
-  "pointerdown",
-  event => {
-    if (state.isPoweredOff) return;
+  if (state.isPoweredOff) return;
 
-    if (
-      event.target.closest("#powerButton") ||
-      event.target.closest("#quickPanel") ||
-      event.target.closest("#bottomNav") ||
-      event.target.closest(".overlay") ||
-      event.target.closest("#photoViewer")
-    ) {
-      return;
-    }
-
-    gestureStartY =
-      getPhoneLocalY(
-        event.clientY
-      );
-
-    gestureActive = true;
-    gestureSource = "screen";
-    gestureHandled = false;
+  if (
+    event.target.closest("#powerButton") ||
+    event.target.closest("#quickPanel") ||
+    event.target.closest("#bottomNav") ||
+    event.target.closest(".overlay") ||
+    event.target.closest("#photoViewer")
+  ) {
+    return;
   }
-);
 
+  gestureStartY = getPhoneLocalY(event.clientY);
+  gestureActive = true;
+  gestureSource = "screen";
+  gestureHandled = false;
 
-$("phone").addEventListener(
-  "pointermove",
-  event => {
-    if (
-      !gestureActive ||
-      gestureStartY === null ||
-      gestureHandled
-    ) {
-      return;
-    }
+});
 
-    const currentY =
-      getPhoneLocalY(
-        event.clientY
-      );
+$("phone").addEventListener("pointermove", event => {
 
-    const difference =
-      currentY -
-      gestureStartY;
-
-
-    /*
-      닫혀 있을 때:
-      위쪽 180px에서 아래로 30px
-    */
-    if (
-      gestureSource === "screen" &&
-      !quickPanel.classList.contains("open") &&
-      gestureStartY <= QUICK_START_ZONE &&
-      difference >= QUICK_SWIPE_DISTANCE
-    ) {
-      gestureHandled = true;
-
-      openQuickPanel();
-
-      resetGesture();
-
-      return;
-    }
-
-
-    /*
-      열려 있을 때:
-      위로 30px
-    */
-    if (
-      gestureSource === "screen" &&
-      quickPanel.classList.contains("open") &&
-      difference <= -QUICK_SWIPE_DISTANCE
-    ) {
-      gestureHandled = true;
-
-      closeQuickPanel();
-
-      resetGesture();
-    }
+  if (!gestureActive || gestureStartY === null || gestureHandled) {
+    return;
   }
-);
 
+  const currentY = getPhoneLocalY(event.clientY);
+  const difference = currentY - gestureStartY;
 
-$("phone").addEventListener(
-  "pointerup",
-  event => {
-    if (
-      !gestureActive ||
-      gestureStartY === null
-    ) {
-      resetGesture();
-      return;
-    }
+  if (
+    gestureSource === "screen" &&
+    !quickPanel.classList.contains("open") &&
+    gestureStartY <= QUICK_START_ZONE &&
+    difference >= QUICK_SWIPE_DISTANCE
+  ) {
 
-    const currentY =
-      getPhoneLocalY(
-        event.clientY
-      );
-
-    const difference =
-      currentY -
-      gestureStartY;
-
-
-    if (
-      !gestureHandled &&
-      gestureSource === "screen" &&
-      !quickPanel.classList.contains("open") &&
-      gestureStartY <= QUICK_START_ZONE &&
-      difference >= QUICK_SWIPE_DISTANCE
-    ) {
-      openQuickPanel();
-
-    } else if (
-      !gestureHandled &&
-      gestureSource === "screen" &&
-      quickPanel.classList.contains("open") &&
-      difference <= -QUICK_SWIPE_DISTANCE
-    ) {
-      closeQuickPanel();
-    }
-
+    gestureHandled = true;
+    openQuickPanel();
     resetGesture();
+    return;
   }
-);
 
+  if (
+    gestureSource === "screen" &&
+    quickPanel.classList.contains("open") &&
+    difference <= -30
+  ) {
 
-$("phone").addEventListener(
-  "pointercancel",
-  resetGesture
-);
-
-
-/*
-  빠른 설정창 자체에서
-  위로 스와이프하면 닫힘
-*/
-
-quickPanel.addEventListener(
-  "pointerdown",
-  event => {
-    if (state.isPoweredOff) return;
-
-    gestureStartY =
-      event.clientY;
-
-    gestureActive = true;
-    gestureSource = "quickPanel";
-    gestureHandled = false;
-  }
-);
-
-
-quickPanel.addEventListener(
-  "pointermove",
-  event => {
-    if (
-      !gestureActive ||
-      gestureStartY === null ||
-      gestureHandled
-    ) {
-      return;
-    }
-
-    if (
-      event.clientY -
-      gestureStartY <=
-      -QUICK_SWIPE_DISTANCE
-    ) {
-      gestureHandled = true;
-
-      closeQuickPanel();
-
-      resetGesture();
-    }
-  }
-);
-
-
-quickPanel.addEventListener(
-  "pointerup",
-  event => {
-    if (
-      !gestureActive ||
-      gestureStartY === null
-    ) {
-      resetGesture();
-      return;
-    }
-
-    if (
-      !gestureHandled &&
-      event.clientY -
-      gestureStartY <=
-      -QUICK_SWIPE_DISTANCE
-    ) {
-      closeQuickPanel();
-    }
-
+    gestureHandled = true;
+    closeQuickPanel();
     resetGesture();
+
   }
-);
+
+});
+
+$("phone").addEventListener("pointerup", event => {
+
+  if (!gestureActive || gestureStartY === null) {
+    resetGesture();
+    return;
+  }
+
+  const currentY = getPhoneLocalY(event.clientY);
+  const difference = currentY - gestureStartY;
+
+  if (
+    !gestureHandled &&
+    gestureSource === "screen" &&
+    !quickPanel.classList.contains("open") &&
+    gestureStartY <= QUICK_START_ZONE &&
+    difference >= QUICK_SWIPE_DISTANCE
+  ) {
+
+    openQuickPanel();
+
+  } else if (
+    !gestureHandled &&
+    gestureSource === "screen" &&
+    quickPanel.classList.contains("open") &&
+    difference <= -30
+  ) {
+
+    closeQuickPanel();
+
+  }
+
+  resetGesture();
+
+});
+
+$("phone").addEventListener("pointercancel", resetGesture);
+
+quickPanel.addEventListener("pointerdown", event => {
+
+  if (state.isPoweredOff) return;
+
+  gestureStartY = event.clientY;
+  gestureActive = true;
+  gestureSource = "quickPanel";
+  gestureHandled = false;
+
+});
+
+quickPanel.addEventListener("pointermove", event => {
+
+  if (!gestureActive || gestureStartY === null || gestureHandled) {
+    return;
+  }
+
+  if (event.clientY - gestureStartY <= -30) {
+
+    gestureHandled = true;
+    closeQuickPanel();
+    resetGesture();
+
+  }
+
+});
+
+quickPanel.addEventListener("pointerup", event => {
+
+  if (!gestureActive || gestureStartY === null) {
+    resetGesture();
+    return;
+  }
+
+  if (!gestureHandled && event.clientY - gestureStartY <= -30) {
+    closeQuickPanel();
+  }
+
+  resetGesture();
+
+});
+
+quickPanel.addEventListener("pointercancel", resetGesture);
 
 
-quickPanel.addEventListener(
-  "pointercancel",
-  resetGesture
-);
 /* =========================================
    밝기
    ========================================= */
@@ -1829,15 +2020,19 @@ const savedBrightness =
     STORAGE.brightness
   ) || "100";
 
+
 $("brightness").value =
   savedBrightness;
+
 
 $("screen").style.filter =
   `brightness(${savedBrightness}%)`;
 
+
 $("brightness").addEventListener(
   "input",
   event => {
+
     const value =
       event.target.value;
 
@@ -1848,6 +2043,7 @@ $("brightness").addEventListener(
 
     $("screen").style.filter =
       `brightness(${value}%)`;
+
   }
 );
 
@@ -1859,6 +2055,7 @@ $("brightness").addEventListener(
 $("wifiButton").addEventListener(
   "click",
   () => {
+
     vibrate();
 
     state.wifi =
@@ -1870,6 +2067,7 @@ $("wifiButton").addEventListener(
         "active",
         state.wifi
       );
+
   }
 );
 
@@ -1881,6 +2079,7 @@ $("wifiButton").addEventListener(
 $("airplaneButton").addEventListener(
   "click",
   () => {
+
     vibrate();
 
     state.airplane =
@@ -1892,6 +2091,7 @@ $("airplaneButton").addEventListener(
         "active",
         state.airplane
       );
+
   }
 );
 
@@ -1901,6 +2101,7 @@ $("airplaneButton").addEventListener(
    ========================================= */
 
 function updateSoundUI() {
+
   const button =
     $("soundButton");
 
@@ -1909,6 +2110,7 @@ function updateSoundUI() {
 
 
   if (state.sound === "sound") {
+
     button.classList.remove(
       "active"
     );
@@ -1918,9 +2120,11 @@ function updateSoundUI() {
     $("soundText").textContent =
       "소리";
 
+
   } else if (
     state.sound === "silent"
   ) {
+
     button.classList.remove(
       "active"
     );
@@ -1930,7 +2134,9 @@ function updateSoundUI() {
     $("soundText").textContent =
       "무음";
 
+
   } else {
+
     button.classList.add(
       "active"
     );
@@ -1939,23 +2145,30 @@ function updateSoundUI() {
 
     $("soundText").textContent =
       "진동";
+
   }
+
 }
 
 
 $("soundButton").addEventListener(
   "click",
   () => {
+
     if (state.sound === "sound") {
+
       state.sound = "silent";
 
     } else if (
       state.sound === "silent"
     ) {
+
       state.sound = "vibrate";
 
     } else {
+
       state.sound = "sound";
+
     }
 
     localStorage.setItem(
@@ -1965,14 +2178,19 @@ $("soundButton").addEventListener(
 
     updateSoundUI();
 
+
     if (
       state.sound !== "silent" &&
       "vibrate" in navigator
     ) {
+
       navigator.vibrate(15);
+
     }
+
   }
 );
+
 
 updateSoundUI();
 
@@ -1984,12 +2202,14 @@ updateSoundUI();
 $("flashButton").addEventListener(
   "click",
   async () => {
+
     vibrate();
 
     if (
       !navigator.mediaDevices ||
       !navigator.mediaDevices.getUserMedia
     ) {
+
       alert(
         "이 브라우저에서는 손전등 기능을 사용할 수 없습니다."
       );
@@ -2000,15 +2220,8 @@ $("flashButton").addEventListener(
 
     try {
 
-      /*
-        손전등이 꺼져 있을 때
-      */
       if (!state.flashlight) {
 
-        /*
-          카메라 스트림이 없으면
-          후면 카메라 스트림을 생성
-        */
         if (!state.stream) {
 
           state.stream =
@@ -2036,10 +2249,6 @@ $("flashButton").addEventListener(
             : {};
 
 
-        /*
-          기기에서 실제 torch를
-          지원하는지 확인
-        */
         if (!capabilities.torch) {
 
           alert(
@@ -2061,6 +2270,7 @@ $("flashButton").addEventListener(
 
         state.flashlight = true;
 
+
         $("flashButton")
           .classList
           .add("active");
@@ -2068,9 +2278,6 @@ $("flashButton").addEventListener(
 
       } else {
 
-        /*
-          손전등 끄기
-        */
         const track =
           state.stream
             ?.getVideoTracks()[0];
@@ -2091,9 +2298,11 @@ $("flashButton").addEventListener(
 
         state.flashlight = false;
 
+
         $("flashButton")
           .classList
           .remove("active");
+
       }
 
 
@@ -2104,34 +2313,27 @@ $("flashButton").addEventListener(
       );
 
     }
+
   }
 );
 
 
 /* =========================================
-   전원 버튼
+   전원
    ========================================= */
 
 /*
-  실제 화면 안에는
-  전원 켜기 버튼을 만들지 않는다.
+  전원이 켜져 있으면 OFF
+  전원이 꺼져 있으면 ON
 
-  오른쪽 측면의 #powerButton을
-  실제 전원 버튼처럼 사용한다.
-
-  켜짐 → 누르면 꺼짐
-  꺼짐 → 같은 버튼을 누르면 켜짐
+  화면 안에는 전원 켜기 버튼을
+  절대로 표시하지 않는다.
 */
-
 
 $("powerButton").addEventListener(
   "click",
   () => {
 
-    /*
-      현재 꺼져 있으면
-      같은 측면 버튼으로 켜기
-    */
     if (state.isPoweredOff) {
 
       powerOn();
@@ -2139,13 +2341,10 @@ $("powerButton").addEventListener(
       return;
     }
 
-
-    /*
-      현재 켜져 있으면 끄기
-    */
     vibrate();
 
     powerOff();
+
   }
 );
 
@@ -2154,38 +2353,22 @@ function powerOff() {
 
   state.isPoweredOff = true;
 
-  /*
-    카메라가 켜져 있다면 종료
-  */
   stopCamera();
 
-  /*
-    빠른 설정창 닫기
-  */
   closeQuickPanel();
 
 
-  /*
-    하단 네비게이션 숨기기
-  */
-  $("bottomNav")
-    .classList
-    .add("powerHidden");
+  $("bottomNav").classList.add("powerHidden");
 
 
-  /*
-    상태바 숨기기
-  */
   $("statusBar").style.display =
     "none";
 
 
-  /*
-    검은색 전원 OFF 화면 표시
-  */
   $("powerOffOverlay")
     .classList
     .remove("hidden");
+
 }
 
 
@@ -2194,34 +2377,20 @@ function powerOn() {
   state.isPoweredOff = false;
 
 
-  /*
-    전원 OFF 화면 제거
-  */
   $("powerOffOverlay")
     .classList
     .add("hidden");
 
 
-  /*
-    하단 네비게이션 표시
-  */
-  $("bottomNav")
-    .classList
-    .remove("powerHidden");
+  $("bottomNav").classList.remove("powerHidden");
 
 
-  /*
-    상태바 표시
-  */
   $("statusBar").style.display =
     "flex";
 
 
-  /*
-    실제 잠금이 설정되어 있다면
-    잠금화면 표시
-  */
   showLockScreen();
+
 }
 
 
@@ -2232,5 +2401,3 @@ function powerOn() {
 updateLockStatus();
 
 showPage("homePage");
-
-showLockScreen();
