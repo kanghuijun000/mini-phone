@@ -10,9 +10,8 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  font-family: Arial, "Noto Sans KR", sans-serif;
   background: #111;
-  font-family: Arial, sans-serif;
-  touch-action: manipulation;
 }
 
 button,
@@ -30,266 +29,176 @@ button {
   display: none !important;
 }
 
-
-/* =========================================
-   스마트폰 본체
-   ========================================= */
+/* 스마트폰 본체 */
 
 #phone {
   position: relative;
   width: min(100vw, 430px);
-  height: min(100vh, 900px);
+  height: min(100vh, 850px);
   margin: auto;
-  overflow: hidden;
   background: #000;
-  border-radius: 28px;
-  box-shadow: 0 0 35px rgba(0, 0, 0, 0.65);
-  user-select: none;
-  touch-action: none;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
 }
 
-
-/* =========================================
-   실제 측면 전원 버튼
-   ========================================= */
+/* 측면 전원 버튼 */
 
 #powerButton {
   position: absolute;
-  z-index: 1000;
-  top: 170px;
-  right: -3px;
-  width: 8px;
-  height: 85px;
-  padding: 0;
-  border-radius: 5px 0 0 5px;
+  right: 0;
+  top: 150px;
+  width: 10px;
+  height: 70px;
   background: #333;
-  box-shadow: inset 1px 0 2px rgba(255,255,255,.15);
-  touch-action: manipulation;
+  border-radius: 5px 0 0 5px;
+  z-index: 1200;
 }
 
-#powerButton:active {
-  transform: translateX(-1px);
-}
-
-
-/* =========================================
-   상태바
-   ========================================= */
+/* 상태바 */
 
 #statusBar {
   position: absolute;
-  z-index: 120;
   top: 0;
   left: 0;
   width: 100%;
-  height: 34px;
-
+  height: 32px;
+  padding: 5px 14px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-
-  padding: 0 18px;
-
+  align-items: center;
   color: white;
   font-size: 13px;
+  z-index: 100;
   pointer-events: none;
 }
 
-
-/* =========================================
-   화면
-   ========================================= */
+/* 화면 */
 
 #screen {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg, #111, #222);
   overflow: hidden;
-
-  background:
-    linear-gradient(160deg, #111, #252525);
-
-  color: white;
-  touch-action: none;
+  transition: filter 0.1s;
 }
-
-
-/* =========================================
-   페이지
-   ========================================= */
 
 .page {
-  position: absolute;
-  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 45px 18px 85px;
   overflow-y: auto;
-  overflow-x: hidden;
-
-  padding:
-    48px 18px
-    80px;
-
-  scrollbar-width: none;
 }
 
-.page::-webkit-scrollbar {
-  display: none;
-}
-
-
-/* =========================================
-   홈
-   ========================================= */
+/* 홈 */
 
 #homePage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  text-align: center;
 }
 
 .homeClock {
-  margin-top: 95px;
-  font-size: 58px;
-  font-weight: 300;
-  letter-spacing: -3px;
+  margin-top: 45px;
+  font-size: 52px;
+  font-weight: 200;
+  color: white;
 }
 
 .homeDate {
-  margin-top: 7px;
-  color: rgba(255,255,255,.75);
-  font-size: 14px;
+  color: #ccc;
+  margin-top: 4px;
+  margin-bottom: 45px;
 }
-
 
 .appGrid {
-  width: 100%;
-  margin-top: 70px;
-
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 25px 10px;
+  gap: 28px 18px;
 }
 
-
 .appIcon {
+  background: transparent;
+  color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 7px;
-
-  color: white;
-  background: transparent;
-
-  touch-action: manipulation;
 }
 
 .appIcon span {
-  width: 58px;
-  height: 58px;
-
+  width: 62px;
+  height: 62px;
+  border-radius: 17px;
+  background: rgba(255,255,255,0.12);
   display: flex;
-  align-items: center;
   justify-content: center;
-
-  border-radius: 16px;
-
-  background: rgba(255,255,255,.14);
-
-  font-size: 30px;
+  align-items: center;
+  font-size: 31px;
+  backdrop-filter: blur(8px);
 }
 
 .appIcon label {
-  color: rgba(255,255,255,.9);
-  font-size: 12px;
+  font-size: 13px;
 }
 
-
-/* =========================================
-   앱 헤더
-   ========================================= */
+/* 앱 헤더 */
 
 .appPage {
-  padding-top: 48px;
+  color: white;
 }
 
 .appHeader {
-  height: 45px;
-
+  height: 50px;
   display: flex;
   align-items: center;
-  gap: 10px;
-
-  margin-bottom: 18px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .appHeader h2 {
   margin: 0;
-  font-size: 21px;
 }
 
-.backApp,
-#memoEditBack {
+.backApp {
   width: 38px;
   height: 38px;
-
   border-radius: 50%;
-
+  background: rgba(255,255,255,0.12);
   color: white;
-  background: rgba(255,255,255,.12);
-
   font-size: 30px;
-  line-height: 1;
 }
 
-
-/* =========================================
-   전화
-   ========================================= */
+/* 전화 */
 
 .phoneBody {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 15px;
 }
 
-#phoneNumber {
+.phoneBody input {
   width: 100%;
-  height: 52px;
-
-  padding: 0 15px;
-
-  border: 1px solid rgba(255,255,255,.15);
-  border-radius: 14px;
-
-  outline: none;
-
-  color: white;
-  background: rgba(255,255,255,.1);
-}
-
-#phoneNumber::placeholder {
-  color: rgba(255,255,255,.5);
+  padding: 15px;
+  border-radius: 12px;
+  border: 0;
+  font-size: 20px;
 }
 
 #callButton {
-  height: 52px;
-
-  border-radius: 14px;
-
+  padding: 15px;
+  border-radius: 12px;
+  background: #35c759;
   color: white;
-  background: #2e8b57;
-
   font-weight: bold;
 }
 
 #callResult {
-  min-height: 25px;
-  color: rgba(255,255,255,.75);
   text-align: center;
+  min-height: 25px;
 }
 
-
-/* =========================================
-   카메라
-   ========================================= */
+/* 카메라 */
 
 .cameraBody {
   display: flex;
@@ -297,15 +206,13 @@ button {
   gap: 12px;
 }
 
-#cameraVideo {
+#cameraVideo,
+#photoCanvas {
   width: 100%;
   aspect-ratio: 3 / 4;
-
   object-fit: cover;
-
+  background: #111;
   border-radius: 18px;
-
-  background: #050505;
 }
 
 #photoCanvas {
@@ -313,586 +220,452 @@ button {
 }
 
 .cameraControls {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 8px;
 }
 
 .cameraControls button {
-  min-height: 45px;
-
+  padding: 11px;
   border-radius: 12px;
-
+  background: #333;
   color: white;
-  background: rgba(255,255,255,.13);
 }
 
 #takePhoto {
-  font-size: 25px;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border-radius: 50%;
+  border: 5px solid white;
+  background: #222;
+  font-size: 20px;
 }
 
-
-/* =========================================
-   갤러리
-   ========================================= */
+/* 갤러리 */
 
 #galleryGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-
+  gap: 5px;
   margin-top: 15px;
 }
 
 .galleryItem {
   position: relative;
   aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #222;
 }
 
 .galleryItem img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 5px;
 }
 
 .galleryDelete {
   position: absolute;
-  top: 4px;
   right: 4px;
-
+  top: 4px;
   width: 25px;
   height: 25px;
-
   border-radius: 50%;
-
+  background: rgba(0,0,0,0.7);
   color: white;
-  background: rgba(0,0,0,.65);
 }
 
-
-/* =========================================
-   사진 뷰어
-   ========================================= */
+/* 사진 확대 */
 
 #photoViewer {
   position: absolute;
-  z-index: 500;
   inset: 0;
-
+  z-index: 500;
+  background: rgba(0,0,0,0.95);
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-
-  gap: 15px;
-
-  padding: 30px;
-
-  background: rgba(0,0,0,.96);
+  align-items: center;
+  padding: 25px;
 }
 
 #viewerImage {
   max-width: 100%;
-  max-height: 70%;
+  max-height: 75%;
   object-fit: contain;
 }
 
 #closePhotoViewer {
   position: absolute;
-  top: 20px;
+  top: 35px;
   right: 20px;
-
-  width: 40px;
-  height: 40px;
-
-  border-radius: 50%;
-
   color: white;
-  background: rgba(255,255,255,.12);
-
-  font-size: 28px;
+  background: transparent;
+  font-size: 38px;
 }
 
 #deleteCurrentPhoto {
-  min-width: 100px;
-  min-height: 42px;
-
-  border-radius: 12px;
-
+  margin-top: 20px;
+  background: #ff3b30;
   color: white;
-  background: #a33;
+  padding: 12px 30px;
+  border-radius: 12px;
 }
 
-
-/* =========================================
-   버튼
-   ========================================= */
+/* 메모 */
 
 .primaryButton,
 .dangerButton {
-  min-height: 44px;
-
-  padding: 0 16px;
-
+  width: 100%;
+  padding: 13px;
   border-radius: 12px;
-
-  color: white;
-  font-weight: bold;
+  margin-bottom: 15px;
 }
 
 .primaryButton {
   background: #3478f6;
+  color: white;
 }
 
 .dangerButton {
-  background: #9d3030;
+  background: #ff3b30;
+  color: white;
 }
 
-
-/* =========================================
-   메모
-   ========================================= */
-
-#memoList,
-#recentList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  margin-top: 15px;
-}
-
-.memoCard,
-.recentCard {
+.memoCard {
   padding: 15px;
-
-  border-radius: 15px;
-
-  background: rgba(255,255,255,.1);
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 13px;
 }
 
 .memoCard h3 {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
 }
 
 .memoCard p {
   margin: 0;
-
-  white-space: pre-wrap;
-  color: rgba(255,255,255,.75);
+  color: #bbb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #memoTitle,
 #memoContent {
   width: 100%;
-
-  border: 1px solid rgba(255,255,255,.15);
-  outline: none;
-
+  border: 0;
   border-radius: 12px;
-
-  color: white;
-  background: rgba(255,255,255,.1);
+  padding: 13px;
+  margin-bottom: 12px;
 }
 
 #memoTitle {
-  height: 48px;
-  padding: 0 14px;
+  font-size: 18px;
 }
 
 #memoContent {
-  min-height: 260px;
-
-  margin-top: 12px;
-  padding: 14px;
-
+  height: 300px;
   resize: none;
-}
-
-#memoTitle::placeholder,
-#memoContent::placeholder {
-  color: rgba(255,255,255,.45);
 }
 
 .memoEditButtons {
   display: flex;
   gap: 10px;
-
-  margin-top: 12px;
 }
 
 .memoEditButtons button {
   flex: 1;
 }
 
-
-/* =========================================
-   시계
-   ========================================= */
+/* 시계 */
 
 .bigClock {
-  margin-top: 110px;
-
-  font-size: 48px;
+  font-size: 60px;
   text-align: center;
-  letter-spacing: -2px;
+  margin-top: 100px;
 }
 
 .bigDate {
-  margin-top: 10px;
-
   text-align: center;
-
-  color: rgba(255,255,255,.7);
+  margin-top: 15px;
+  color: #bbb;
 }
 
-
-/* =========================================
-   설정
-   ========================================= */
+/* 설정 */
 
 .settingItem {
-  padding: 16px;
-  margin-bottom: 12px;
-
-  border-radius: 16px;
-
-  background: rgba(255,255,255,.09);
+  background: rgba(255,255,255,0.09);
+  padding: 18px;
+  border-radius: 15px;
+  margin-bottom: 15px;
 }
 
 .settingItem strong {
   display: block;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
 }
 
 #lockStatus {
   display: block;
-
-  margin-bottom: 13px;
-
-  color: rgba(255,255,255,.65);
-  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 14px;
 }
 
 .settingButtons,
 .backgroundButtons {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
 
 .settingButtons button,
 .backgroundButtons button {
-  min-height: 40px;
-
-  padding: 0 12px;
-
+  padding: 11px;
   border-radius: 10px;
-
+  background: #333;
   color: white;
-  background: rgba(255,255,255,.13);
 }
 
+/* 최근 앱 */
 
-/* =========================================
-   잠금 화면
-   ========================================= */
+.recentCard {
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 13px;
+  margin-bottom: 10px;
+  color: white;
+}
 
-.lockScreen {
-  z-index: 200;
+.recentCard button {
+  margin-top: 10px;
+  background: #3478f6;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+}
 
+/* 하단 네비게이션 */
+
+#bottomNav {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 78px;
+  padding-bottom: 8px;
+  background: rgba(20,20,20,0.94);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  z-index: 700;
+}
+
+#bottomNav button {
+  min-height: 62px;
+  background: transparent;
+  color: #ddd;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 3px;
+  transform: translateY(-5px);
+  border-radius: 12px;
+}
 
+#bottomNav button span {
+  font-size: 25px;
+}
+
+#bottomNav button small {
+  font-size: 10px;
+}
+
+#bottomNav button:active {
+  background: rgba(255,255,255,0.12);
+}
+
+#bottomNav.powerHidden {
+  display: none !important;
+}
+
+/* 잠금화면 */
+
+#lockScreen {
+  position: absolute;
+  inset: 0;
+  z-index: 300;
+  background: linear-gradient(160deg, #111, #222);
+  color: white;
   text-align: center;
-
-  background:
-    linear-gradient(
-      160deg,
-      rgba(0,0,0,.5),
-      rgba(0,0,0,.9)
-    );
 }
 
 .lockTime {
+  font-size: 62px;
   margin-top: 75px;
-  font-size: 58px;
-  font-weight: 300;
 }
 
 .lockDate {
-  margin-top: 5px;
-  color: rgba(255,255,255,.7);
+  color: #bbb;
 }
 
 .lockMessage {
-  margin: 30px 0 12px;
+  margin: 45px 0 15px;
 }
 
 #unlockPin {
-  width: 190px;
-  height: 48px;
-
-  padding: 0 15px;
-
-  border: 1px solid rgba(255,255,255,.2);
-  border-radius: 13px;
-
-  outline: none;
-
-  color: white;
-  background: rgba(255,255,255,.12);
-
+  width: 180px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 0;
   text-align: center;
-  letter-spacing: 4px;
+  font-size: 22px;
 }
 
-#unlockPinButton {
+#unlockPinButton,
+#verifyLockButton {
   display: block;
-
-  width: 190px;
-  height: 46px;
-
-  margin-top: 12px;
-
-  border-radius: 12px;
-
-  color: white;
+  margin: 15px auto;
+  padding: 11px 25px;
+  border-radius: 10px;
   background: #3478f6;
+  color: white;
 }
 
-
-/* =========================================
-   패턴
-   ========================================= */
+/* 패턴 */
 
 .patternBoard {
   position: relative;
-
   width: 270px;
   height: 270px;
-
-  margin: 15px auto;
-
+  margin: 20px auto;
   touch-action: none;
 }
 
 .patternBoard canvas {
   position: absolute;
   inset: 0;
-
   width: 100%;
   height: 100%;
-
-  pointer-events: none;
 }
 
 .patternBoard i {
   position: absolute;
-
-  width: 24px;
-  height: 24px;
-
-  margin-left: -12px;
-  margin-top: -12px;
-
+  width: 28px;
+  height: 28px;
   border: 3px solid white;
   border-radius: 50%;
-
+  transform: translate(-50%, -50%);
   background: transparent;
-
   z-index: 2;
-
-  transition:
-    transform .1s,
-    background .1s;
 }
 
 .patternBoard i.active {
   background: white;
-  transform: scale(1.25);
+  box-shadow: 0 0 12px white;
 }
 
-
-/* 3 x 3 */
-
-.patternBoard i[data-index="0"] {
-  left: 25%;
-  top: 25%;
+.patternBoard i:nth-of-type(1) {
+  left: 20%;
+  top: 20%;
 }
 
-.patternBoard i[data-index="1"] {
+.patternBoard i:nth-of-type(2) {
   left: 50%;
-  top: 25%;
+  top: 20%;
 }
 
-.patternBoard i[data-index="2"] {
-  left: 75%;
-  top: 25%;
+.patternBoard i:nth-of-type(3) {
+  left: 80%;
+  top: 20%;
 }
 
-.patternBoard i[data-index="3"] {
-  left: 25%;
+.patternBoard i:nth-of-type(4) {
+  left: 20%;
   top: 50%;
 }
 
-.patternBoard i[data-index="4"] {
+.patternBoard i:nth-of-type(5) {
   left: 50%;
   top: 50%;
 }
 
-.patternBoard i[data-index="5"] {
-  left: 75%;
+.patternBoard i:nth-of-type(6) {
+  left: 80%;
   top: 50%;
 }
 
-.patternBoard i[data-index="6"] {
-  left: 25%;
-  top: 75%;
+.patternBoard i:nth-of-type(7) {
+  left: 20%;
+  top: 80%;
 }
 
-.patternBoard i[data-index="7"] {
+.patternBoard i:nth-of-type(8) {
   left: 50%;
-  top: 75%;
+  top: 80%;
 }
 
-.patternBoard i[data-index="8"] {
-  left: 75%;
-  top: 75%;
+.patternBoard i:nth-of-type(9) {
+  left: 80%;
+  top: 80%;
 }
 
-
-/* =========================================
-   오버레이
-   ========================================= */
+/* 오버레이 */
 
 .overlay {
   position: absolute;
-  z-index: 700;
   inset: 0;
-
+  z-index: 600;
+  background: rgba(0,0,0,0.75);
   display: flex;
-  align-items: center;
   justify-content: center;
-
+  align-items: center;
   padding: 20px;
-
-  background: rgba(0,0,0,.7);
 }
 
 .overlayBox {
-  position: relative;
-
-  width: min(100%, 350px);
-
-  max-height: 90%;
-  overflow-y: auto;
-
-  padding: 25px;
-
-  border-radius: 20px;
-
-  color: white;
+  width: 100%;
+  max-width: 360px;
   background: #202020;
-
+  color: white;
+  border-radius: 20px;
+  padding: 25px;
   text-align: center;
-}
-
-.overlayBox h2 {
-  margin-top: 0;
-}
-
-.overlayBox p {
-  color: rgba(255,255,255,.65);
-  font-size: 13px;
 }
 
 .overlayBox input {
   width: 100%;
-  height: 48px;
-
-  margin-top: 10px;
-  padding: 0 14px;
-
-  border: 1px solid rgba(255,255,255,.15);
-  border-radius: 12px;
-
-  outline: none;
-
-  color: white;
-  background: rgba(255,255,255,.08);
-
+  padding: 13px;
+  border-radius: 10px;
+  border: 0;
+  margin: 6px 0;
   text-align: center;
 }
 
-.overlayBox > button:not(.overlayCloseButton) {
+.overlayBox > button {
   width: 100%;
-  min-height: 45px;
-
+  padding: 13px;
   margin-top: 12px;
-
-  border-radius: 12px;
-
-  color: white;
+  border-radius: 10px;
   background: #3478f6;
-}
-
-.overlayCloseButton {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-
-  width: 34px;
-  height: 34px;
-
-  border-radius: 50%;
-
   color: white;
-  background: rgba(255,255,255,.1);
-
-  font-size: 23px;
 }
 
-
-/* =========================================
-   빠른 설정 패널
-   ========================================= */
+/* 빠른 설정 */
 
 #quickPanel {
   position: absolute;
-  z-index: 600;
-
   top: 0;
   left: 0;
-
   width: 100%;
   height: 360px;
-
-  padding:
-    18px
-    18px
-    25px;
-
-  border-radius:
-    0
-    0
-    24px
-    24px;
-
-  background:
-    rgba(25,25,25,.97);
-
+  padding: 20px;
+  background: rgba(20,20,20,0.97);
   color: white;
-
-  transform: translateY(-105%);
-
-  transition:
-    transform .25s ease;
-
+  z-index: 800;
+  transform: translateY(-100%);
+  transition: transform 0.22s ease;
+  border-radius: 0 0 22px 22px;
   touch-action: none;
 }
 
@@ -901,179 +674,60 @@ button {
 }
 
 .quickHandle {
-  width: 42px;
-  height: 5px;
-
-  margin: 2px auto 15px;
-
+  width: 45px;
+  height: 4px;
   border-radius: 10px;
-
-  background: rgba(255,255,255,.4);
-}
-
-.quickHeader {
-  margin-bottom: 16px;
-
-  font-size: 20px;
-  font-weight: bold;
+  background: #777;
+  margin: 4px auto 20px;
 }
 
 .brightnessBox {
   display: flex;
   align-items: center;
   gap: 10px;
-
-  padding: 12px;
-
-  border-radius: 15px;
-
-  background: rgba(255,255,255,.08);
+  margin-bottom: 20px;
 }
 
-#brightness {
+.brightnessBox input {
   flex: 1;
 }
 
 .quickGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-
   gap: 10px;
-
-  margin-top: 12px;
 }
 
 .quickButton {
-  min-height: 85px;
-
+  height: 80px;
+  background: #333;
+  color: white;
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   gap: 5px;
-
-  border-radius: 16px;
-
-  color: white;
-  background: rgba(255,255,255,.1);
-}
-
-.quickButton span {
-  font-size: 25px;
-}
-
-.quickButton small {
-  font-size: 12px;
 }
 
 .quickButton.active {
   background: #3478f6;
 }
 
-
-/* =========================================
-   하단 네비게이션
-   ========================================= */
-
-#bottomNav {
-  position: absolute;
-  z-index: 550;
-
-  left: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: 62px;
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-
-  border-top:
-    1px solid rgba(255,255,255,.1);
-
-  background:
-    rgba(0,0,0,.78);
-
-  backdrop-filter: blur(10px);
-}
-
-#bottomNav button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  gap: 2px;
-
-  color: rgba(255,255,255,.8);
-  background: transparent;
-}
-
-#bottomNav button span {
-  font-size: 20px;
-  line-height: 20px;
-}
-
-#bottomNav button small {
-  font-size: 9px;
-}
-
-#bottomNav button:active {
-  background: rgba(255,255,255,.1);
-}
-
-#bottomNav.powerHidden {
-  display: none !important;
-}
-
-
-/* =========================================
-   전원 OFF
-   ========================================= */
+/* 전원 OFF 화면 */
 
 .powerOverlay {
   position: absolute;
-  z-index: 900;
-
   inset: 0;
-
   background: #000;
-
+  z-index: 1100;
   pointer-events: none;
 }
 
-
-/* =========================================
-   반응형
-   ========================================= */
-
-@media (max-height: 700px) {
-
-  .homeClock {
-    margin-top: 65px;
-    font-size: 48px;
-  }
-
-  .appGrid {
-    margin-top: 40px;
-    gap: 18px 8px;
-  }
-
-  .patternBoard {
-    width: 240px;
-    height: 240px;
-  }
-
+#powerOffOverlay:not(.hidden) {
+  display: block !important;
 }
 
-
-@media (min-width: 431px) {
-
-  body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
+body {
+  overscroll-behavior: none;
 }
